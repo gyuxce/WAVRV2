@@ -1,0 +1,4 @@
+source_system,external_transaction_id,line_number,service_code,service_name,service_category,quantity,unit_amount,line_amount
+LEGACY_CSV,INV-24089,1,SRV-LASER-GLOW,Laser Glow,Laser,1,1850000.00,1850000.00
+LEGACY_CSV,INV-24088,1,SRV-HYDRA-FACIAL,Hydra Facial,Facial,1,950000.00,950000.00
+LEGACY_CSV,REF-24088,1,SRV-HYDRA-FACIAL,Hydra Facial,Facial,1,950000.00,950000.00

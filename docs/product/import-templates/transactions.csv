@@ -1,0 +1,4 @@
+source_system,external_transaction_id,external_customer_id,customer_phone,branch_code,transaction_type,occurred_at,currency,gross_amount,discount_amount,net_amount,refund_of_external_transaction_id
+LEGACY_CSV,INV-24089,CUST-001,,SENOPATI,sale,2026-08-09T09:42:00+07:00,IDR,1850000.00,0.00,1850000.00,
+LEGACY_CSV,INV-24088,CUST-002,,SENOPATI,sale,2026-08-08T16:20:00+07:00,IDR,1000000.00,50000.00,950000.00,
+LEGACY_CSV,REF-24088,CUST-002,,SENOPATI,refund,2026-08-10T10:15:00+07:00,IDR,950000.00,0.00,950000.00,INV-24088

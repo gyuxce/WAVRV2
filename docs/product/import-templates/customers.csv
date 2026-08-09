@@ -1,0 +1,4 @@
+source_system,external_customer_id,full_name,phone,email,birth_date,joined_at,home_branch_code,whatsapp_consent,consent_recorded_at,membership_number
+LEGACY_CSV,CUST-001,Nadia Prameswari,081234567890,nadia@example.com,1994-05-12,2025-02-10T09:00:00+07:00,SENOPATI,true,2025-02-10T09:00:00+07:00,M-000291
+LEGACY_CSV,CUST-002,Raka Wijaya,081298765432,raka@example.com,,2025-04-18T11:30:00+07:00,SENOPATI,true,2025-04-18T11:30:00+07:00,M-000292
+LEGACY_CSV,CUST-003,Maya Kurnia,081377788899,,,2025-06-03T15:00:00+07:00,KEMANG,,,M-000293

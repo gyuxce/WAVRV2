@@ -13,6 +13,8 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 - [Website Custara](index.html) - website marketing responsif dengan akses ke Demo Produk.
 - [Demo Produk Custara](mockup/custara-mockup.html) - dashboard interaktif yang memakai design system Custara dan memiliki tautan kembali ke website.
 - `demo-custara.css` - lapisan desain bersama untuk menyamakan demo produk dengan website.
+- [Custara V1 Data and Growth Contract](docs/product/custara-v1-data-growth-contract.md) - kontrak CSV, model data, deduplikasi customer, dan opportunity engine.
+- [Template impor CSV](docs/product/import-templates/) - contoh customer, transaksi, item transaksi, dan kunjungan.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 
