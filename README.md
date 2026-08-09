@@ -11,7 +11,7 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 ## Isi repository
 
 - [Website Custara](index.html) - website marketing responsif dengan akses ke Demo Produk.
-- [Demo Produk Custara](mockup/wavr-v1-mockup.html) - dashboard interaktif yang memakai design system Custara dan memiliki tautan kembali ke website.
+- [Demo Produk Custara](mockup/custara-mockup.html) - dashboard interaktif yang memakai design system Custara dan memiliki tautan kembali ke website.
 - `demo-custara.css` - lapisan desain bersama untuk menyamakan demo produk dengan website.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
