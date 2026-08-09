@@ -1,14 +1,14 @@
-# WAVR V1 Mockup & Instagram Growth Playbook
+# Custara V1 Mockup & Instagram Growth Playbook
 
-Repository ini berisi mockup produk inti WAVR V1 dan dokumen strategi pemasaran Instagram sebagai referensi terpisah.
+Repository ini berisi mockup produk inti Custara V1 dan dokumen strategi pemasaran Instagram sebagai referensi terpisah.
 
 ## Isi repository
 
-- [Mockup WAVR V1](mockup/wavr-v1-mockup.html) - buka langsung di browser untuk mencoba dashboard interaktif.
+- [Mockup Custara V1](mockup/wavr-v1-mockup.html) - buka langsung di browser untuk mencoba dashboard interaktif.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 
-## Fitur mockup WAVR V1
+## Fitur mockup Custara V1
 
 - Ikhtisar KPI dan kesehatan sistem.
 - Data pelanggan dan profil pelanggan.
@@ -18,7 +18,7 @@ Repository ini berisi mockup produk inti WAVR V1 dan dokumen strategi pemasaran 
 - Kampanye dengan atribusi dan status eksekusi.
 - Pengaturan cabang, peran, dan integrasi.
 
-Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan WAVR kepada owner klinik; Instagram bukan modul produk pada mockup ini.
+Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan Custara kepada owner klinik; Instagram bukan modul produk pada mockup ini.
 
 ## Cara menjalankan mockup
 

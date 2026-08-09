@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mockup interaktif WAVR V1" />
-  <title>WAVR V1 Mockup</title>
+  <meta name="description" content="Mockup interaktif Custara V1" />
+  <title>Custara V1 Mockup</title>
   <style>
     :root {
       --wavr-ink: #101a2f;
@@ -348,7 +348,7 @@
     <aside class="wavr-sidebar" aria-label="Navigasi utama">
       <div class="wavr-brand">
         <div class="wavr-brand-mark">w/</div>
-        <div class="wavr-brand-text"><strong>WAVR</strong><span>Sistem Pertumbuhan Pelanggan</span></div>
+        <div class="wavr-brand-text"><strong>Custara</strong><span>Sistem Pertumbuhan Pelanggan</span></div>
       </div>
       <div class="wavr-nav-label">Ruang kerja</div>
       <nav class="wavr-nav" id="mainNav">
@@ -368,7 +368,7 @@
 
     <main class="wavr-main">
       <header class="wavr-topbar">
-        <div class="wavr-breadcrumb"><span>WAVR /</span><strong id="breadcrumbCurrent">Ikhtisar</strong></div>
+        <div class="wavr-breadcrumb"><span>Custara /</span><strong id="breadcrumbCurrent">Ikhtisar</strong></div>
         <div class="wavr-topbar-actions">
           <button type="button" class="wavr-button primary wavr-demo-launch" data-action="start-demo"><span data-icon-name="spark"></span><span id="demoButtonLabel">Mulai simulasi</span></button>
           <button type="button" class="wavr-button small wavr-global-scan" data-action="scan"><span data-icon-name="scan"></span>Pindai ID</button>
@@ -517,7 +517,7 @@
 
     function renderDemoBar() {
       const complete = appState.demo.stepIndex >= demoSteps.length;
-      const current = complete ? { title: "Skenario selesai", description: "Alur utama WAVR berhasil dijalankan dengan data demo." } : demoSteps[appState.demo.stepIndex];
+      const current = complete ? { title: "Skenario selesai", description: "Alur utama Custara berhasil dijalankan dengan data demo." } : demoSteps[appState.demo.stepIndex];
       return `<section class="wavr-demo-bar" aria-label="Kontrol mode simulasi"><div><span class="wavr-demo-kicker">Mode simulasi</span><h2>${current.title}</h2><p>${current.description}</p></div><div class="wavr-demo-progress">${demoSteps.map((step, index) => `<div class="wavr-demo-step ${index < appState.demo.stepIndex ? 'is-done' : ''} ${index === appState.demo.stepIndex && !complete ? 'is-current' : ''}"><div class="wavr-demo-step-line"></div><span>${index + 1}. ${step.label}</span></div>`).join("")}</div><div class="wavr-demo-actions"><button type="button" class="wavr-button" data-action="demo-next">${complete ? 'Ulangi demo' : 'Langkah berikutnya'} ${icon("arrow", 13)}</button><button type="button" class="wavr-button secondary" data-action="demo-scan-error">Uji error ID</button><button type="button" class="wavr-button secondary" data-action="demo-provider-error">Uji penyedia</button><button type="button" class="wavr-button secondary" data-action="demo-reset">Atur ulang</button></div></section>`;
     }
 
@@ -693,7 +693,7 @@
       const customer = appState.customers.find(item => item.identifier === value);
       const error = document.getElementById("scanError");
       if (value === "RFID-REVOKED") { error.querySelector("span").textContent = "ID pengenal sudah dicabut. Pulihkan ID atau pilih alur pemulihan manual."; error.hidden = false; return; }
-      if (!customer) { error.querySelector("span").textContent = "ID pengenal tidak dikenal. WAVR tidak membuat pelanggan otomatis; periksa nilainya atau pilih Tambah pelanggan."; error.hidden = false; return; }
+      if (!customer) { error.querySelector("span").textContent = "ID pengenal tidak dikenal. Custara tidak membuat pelanggan otomatis; periksa nilainya atau pilih Tambah pelanggan."; error.hidden = false; return; }
       closeModal(); openCustomerModal(customer.id);
     }
 
@@ -1106,7 +1106,7 @@
       const audiences = {
         prospecting: { title: "Prospek lokal", summary: "Menjangkau calon pelanggan baru di sekitar cabang.", rows: ["Lokasi: Senopati + 8 km", "Usia minimum sesuai layanan", "Minat: skincare, kecantikan, wellness", "Materi: Reels edukasi dan pengenalan klinik"] },
         warm: { title: "Audiens hangat", summary: "Menindaklanjuti orang yang sudah menunjukkan ketertarikan.", rows: ["Penonton Reels 30 hari", "Interaksi dengan akun Instagram", "Pengunjung profil dan pengirim DM", "Materi: FAQ, bukti kepercayaan, CTA booking"] },
-        customer: { title: "Pelanggan berizin", summary: "Menjaga hubungan pelanggan yang sudah pernah datang.", rows: ["Pelanggan dengan persetujuan komunikasi", "Exclude pelanggan yang baru berkunjung bila perlu", "Gunakan segmen WAVR untuk repeat visit", "Materi: reward, cross-sell, dan reaktivasi"] }
+        customer: { title: "Pelanggan berizin", summary: "Menjaga hubungan pelanggan yang sudah pernah datang.", rows: ["Pelanggan dengan persetujuan komunikasi", "Exclude pelanggan yang baru berkunjung bila perlu", "Gunakan segmen Custara untuk repeat visit", "Materi: reward, cross-sell, dan reaktivasi"] }
       };
       const audience = audiences[kind] || audiences.prospecting;
       openModal(`Audiens · ${audience.title}`, audience.summary, `<div class="wavr-health-list">${audience.rows.map(row => `<div class="wavr-health-row">${icon("check-circle", 16)}<div><strong>${row}</strong><span>Parameter contoh untuk playbook Instagram V1</span></div></div>`).join("")}</div>`, `<button type="button" class="wavr-button" data-action="close-modal">Tutup</button><button type="button" class="wavr-button primary" data-action="use-instagram-audience" data-audience="${kind}"><span data-icon-name="megaphone"></span>Rencanakan iklan</button>`);
