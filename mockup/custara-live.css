@@ -1,0 +1,167 @@
+.custara-live-overlay[hidden],
+.custara-live-logout[hidden] {
+  display: none !important;
+}
+
+.custara-live-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(14, 23, 43, 0.68);
+  backdrop-filter: blur(8px);
+}
+
+.custara-live-card {
+  width: min(440px, 100%);
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 28px 80px rgba(14, 23, 43, 0.24);
+}
+
+.custara-live-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  color: #17212f;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.custara-live-brand img {
+  width: 30px;
+  height: 30px;
+}
+
+.custara-live-card h2 {
+  margin: 0 0 8px;
+  color: #17212f;
+  font-size: 25px;
+  letter-spacing: -0.04em;
+}
+
+.custara-live-card > p {
+  margin: 0 0 23px;
+  color: #64736e;
+  line-height: 1.6;
+}
+
+.custara-live-field {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0;
+}
+
+.custara-live-field label {
+  color: #40514d;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.custara-live-field input {
+  width: 100%;
+  padding: 12px 13px;
+  border: 1px solid #d6dfdc;
+  border-radius: 9px;
+  color: #17212f;
+  background: #fff;
+}
+
+.custara-live-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.custara-live-actions button {
+  min-height: 43px;
+}
+
+.custara-live-secondary {
+  border: 1px solid #d6dfdc;
+  border-radius: 9px;
+  color: #40514d;
+  background: #fff;
+}
+
+.custara-live-error {
+  margin-top: 13px;
+  padding: 10px 12px;
+  border: 1px solid #f3c9d0;
+  border-radius: 9px;
+  color: #a7354c;
+  background: #fff2f4;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.custara-live-note {
+  margin: 18px 0 0 !important;
+  color: #8a9893 !important;
+  font-size: 11px;
+  line-height: 1.5 !important;
+}
+
+.custara-live-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border: 1px solid #d6dfdc;
+  border-radius: 999px;
+  color: #677671;
+  background: #fff;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.custara-live-status::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a9b4af;
+  content: "";
+}
+
+.custara-live-status.is-live {
+  border-color: #b9e7df;
+  color: #167d73;
+  background: #effbf8;
+}
+
+.custara-live-status.is-live::before {
+  background: #19aa98;
+}
+
+.custara-live-logout {
+  padding: 8px 10px;
+  border: 0;
+  color: #70807a;
+  background: transparent;
+  font-size: 11px;
+}
+
+.custara-live-empty {
+  padding: 32px 18px;
+  border: 1px dashed #cad6d2;
+  border-radius: 13px;
+  color: #75847e;
+  text-align: center;
+  line-height: 1.55;
+}
+
+.custara-live-opportunity-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .custara-live-status { display: none; }
+  .custara-live-logout { display: none; }
+}

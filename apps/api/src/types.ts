@@ -29,6 +29,8 @@ export type AppDependencies = {
   idempotencyTtlDays: number;
   maxImportFileBytes: number;
   allowedOrigins: string[];
+  supabaseUrl?: string;
+  supabasePublishableKey?: string;
   storage?: ImportStorage;
 };
 

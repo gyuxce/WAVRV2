@@ -38,6 +38,13 @@ export async function buildApp(dependencies: AppDependencies): Promise<FastifyIn
     }
   });
 
+  // Only publishable client configuration is exposed here. The service-role
+  // key and database credentials never leave the API process.
+  app.get("/public-config", async () => ({
+    supabase_url: dependencies.supabaseUrl ?? null,
+    supabase_publishable_key: dependencies.supabasePublishableKey ?? null,
+  }));
+
   app.addHook("preHandler", async (request) => {
     if (!request.url.startsWith("/v1/")) return;
     const claims = await dependencies.verifyToken(getBearerToken(request.headers.authorization));
@@ -45,6 +52,30 @@ export async function buildApp(dependencies: AppDependencies): Promise<FastifyIn
     const context = await resolveTenantContext(dependencies.prisma, claims, selectedOrganizationId);
     request.authClaims = claims;
     request.custaraContext = context;
+  });
+
+  app.get("/v1/me", async (request, reply) => {
+    const context = request.custaraContext;
+    if (!context) return reply.status(401).send({ code: "UNAUTHORIZED", title: "Unauthorized" });
+    const membership = await dependencies.prisma.organizationUser.findUnique({
+      where: { id: context.organizationUserId },
+      include: {
+        user: true,
+        role: true,
+        organization: true,
+        branchScopes: { include: { branch: true } },
+      },
+    });
+    if (!membership) return reply.status(404).send({ code: "MEMBERSHIP_NOT_FOUND", title: "Membership not found" });
+    return {
+      data: {
+        user: { id: membership.user.id, name: membership.user.name, email: membership.user.email },
+        organization: { id: membership.organization.id, name: membership.organization.name, slug: membership.organization.slug, currency: membership.organization.currency },
+        role: { key: membership.role.key, name: membership.role.name },
+        branches: membership.branchScopes.map((scope) => ({ id: scope.branch.id, code: scope.branch.code, name: scope.branch.name })),
+        organization_wide: context.organizationWide,
+      },
+    };
   });
 
   await registerCustomerRoutes(app, dependencies.prisma, dependencies.idempotencyTtlDays);

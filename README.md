@@ -36,7 +36,14 @@ Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan Cu
 
 ## Cara menjalankan
 
-Klik `index.html`, lalu pilih **Demo Produk** pada navigasi untuk mencoba dashboard interaktif. Website dan demo UI masih berjalan sebagai prototype lokal; runtime backend Custara tersedia di `apps/api` dan membutuhkan project Supabase untuk dijalankan penuh.
+Untuk menjalankan website dan demo yang terhubung ke API lokal:
+
+1. Terminal pertama: masuk ke `apps/api`, lalu jalankan `pnpm dev`.
+2. Terminal kedua dari root repository: jalankan `node tools/serve-static.cjs`.
+3. Buka `http://127.0.0.1:5500/mockup/custara-mockup.html`.
+4. Masuk memakai user Supabase Auth. Pilih **Lanjutkan dengan data demo** jika hanya ingin menjelajahi prototype.
+
+Dashboard live mengambil konfigurasi publishable dari API, menggunakan Supabase Auth untuk sesi login, lalu mengirim access token ke endpoint runtime. Service-role key tetap berada di server API.
 
 ## Catatan
 

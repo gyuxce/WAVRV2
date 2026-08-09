@@ -14,6 +14,8 @@ const app = await buildApp({
   idempotencyTtlDays: config.IDEMPOTENCY_TTL_DAYS,
   maxImportFileBytes: config.MAX_IMPORT_FILE_BYTES,
   allowedOrigins: config.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim()).filter(Boolean),
+  supabaseUrl: config.SUPABASE_URL,
+  supabasePublishableKey: config.SUPABASE_PUBLISHABLE_KEY,
   storage: createSupabaseImportStorage(config),
 });
 
