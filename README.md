@@ -15,6 +15,9 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 - `demo-custara.css` - lapisan desain bersama untuk menyamakan demo produk dengan website.
 - [Custara V1 Data and Growth Contract](docs/product/custara-v1-data-growth-contract.md) - kontrak CSV, model data, deduplikasi customer, dan opportunity engine.
 - [Template impor CSV](docs/product/import-templates/) - contoh customer, transaksi, item transaksi, dan kunjungan.
+- [ERD final Custara V1](docs/product/custara-v1-erd.md) - relasi database dan batas domain implementatif.
+- [OpenAPI Custara V1](docs/product/openapi-v1.yaml) - kontrak Customer, Import, Transaction, dan Opportunity.
+- [Fondasi API + Prisma](apps/api/) - schema PostgreSQL, migration awal, dan konfigurasi Prisma 7.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 

@@ -1,0 +1,1654 @@
+openapi: 3.1.0
+info:
+  title: Custara API
+  version: 1.0.0-draft
+  license:
+    name: Proprietary
+    identifier: LicenseRef-Custara-Proprietary
+  description: |
+    REST contract for the Custara V1 customer growth loop.
+    Organization context is resolved from the authenticated session/token.
+    Clients must not send or trust organization IDs in business payloads.
+servers:
+  - url: https://api.custara.online
+    description: Production
+tags:
+  - name: Customers
+    description: Organization-wide identity, consent, identifiers, timeline, and duplicate resolution.
+  - name: Imports
+    description: CSV staging, validation, duplicate decisions, commit, and error reporting.
+  - name: Transactions
+    description: Immutable sales, item snapshots, refunds, and derived business activity.
+  - name: Opportunities
+    description: Explainable per-customer opportunities, actions, definitions, and measurable outcomes.
+security:
+  - bearerAuth: []
+paths:
+  /v1/customers:
+    get:
+      tags: [Customers]
+      operationId: listCustomers
+      summary: Search and list customers
+      x-permission: customers.read
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: search
+          in: query
+          schema:
+            type: string
+            maxLength: 150
+          description: Name, normalized phone, email, membership number, or external ID.
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/CustomerStatus'
+        - name: duplicate_review
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Customer page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerSummary'
+                  meta:
+                    $ref: '#/components/schemas/CursorMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Customers]
+      operationId: createCustomer
+      summary: Register a customer with duplicate protection
+      x-permission: customers.create
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '409':
+          description: Strong identity conflict
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          description: Possible duplicate requires an explicit decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DuplicateReviewResponse'
+
+  /v1/customers/{customerId}:
+    parameters:
+      - $ref: '#/components/parameters/CustomerId'
+    get:
+      tags: [Customers]
+      operationId: getCustomer
+      summary: Get Customer 360
+      x-permission: customers.read
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+      responses:
+        '200':
+          description: Customer detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Customers]
+      operationId: updateCustomer
+      summary: Update permitted customer profile fields
+      x-permission: customers.update
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/customers/{customerId}/timeline:
+    get:
+      tags: [Customers]
+      operationId: getCustomerTimeline
+      summary: Get visits, transactions, loyalty, opportunities, actions, and outcomes
+      x-permission: customers.read
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Timeline page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimelineEvent'
+                  meta:
+                    $ref: '#/components/schemas/CursorMeta'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/customers/{customerId}/identifiers:
+    post:
+      tags: [Customers]
+      operationId: assignCustomerIdentifier
+      summary: Assign a QR, NFC, RFID, or membership identifier
+      description: The server generates the opaque token. A scan URL is returned only at assignment time.
+      x-permission: identifiers.assign
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignIdentifierRequest'
+      responses:
+        '201':
+          description: Identifier assigned
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AssignedIdentifier'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/customers/{customerId}/merge:
+    post:
+      tags: [Customers]
+      operationId: mergeCustomer
+      summary: Merge a duplicate into the path customer as survivor
+      x-permission: customers.merge
+      parameters:
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MergeCustomerRequest'
+      responses:
+        '200':
+          description: Merge completed and audited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/imports:
+    post:
+      tags: [Imports]
+      operationId: createImportJob
+      summary: Upload and begin validating a CSV import
+      x-permission: imports.create
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [type, mode, file]
+              properties:
+                type:
+                  $ref: '#/components/schemas/ImportType'
+                mode:
+                  $ref: '#/components/schemas/ImportMode'
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '202':
+          description: Import accepted for validation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJobResponse'
+        '413':
+          description: File exceeds configured import limit
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /v1/imports/{importJobId}:
+    get:
+      tags: [Imports]
+      operationId: getImportJob
+      summary: Get validation, duplicate, commit, and error counters
+      x-permission: imports.read
+      parameters:
+        - $ref: '#/components/parameters/ImportJobId'
+      responses:
+        '200':
+          description: Import status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJobResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/imports/{importJobId}/duplicate-decisions:
+    post:
+      tags: [Imports]
+      operationId: resolveImportDuplicates
+      summary: Resolve ambiguous customer rows before commit
+      x-permission: imports.resolve_duplicates
+      parameters:
+        - $ref: '#/components/parameters/ImportJobId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [decisions]
+              properties:
+                decisions:
+                  type: array
+                  minItems: 1
+                  maxItems: 500
+                  items:
+                    $ref: '#/components/schemas/DuplicateDecision'
+      responses:
+        '200':
+          description: Decisions saved and validation counters recalculated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJobResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/imports/{importJobId}/commit:
+    post:
+      tags: [Imports]
+      operationId: commitImportJob
+      summary: Commit a validated staged import
+      x-permission: imports.commit
+      parameters:
+        - $ref: '#/components/parameters/ImportJobId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202':
+          description: Commit started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportJobResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/imports/{importJobId}/errors:
+    get:
+      tags: [Imports]
+      operationId: downloadImportErrors
+      summary: Download row-level CSV error report
+      x-permission: imports.read
+      parameters:
+        - $ref: '#/components/parameters/ImportJobId'
+      responses:
+        '200':
+          description: CSV error report
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/transactions:
+    get:
+      tags: [Transactions]
+      operationId: listTransactions
+      summary: List transaction history
+      x-permission: transactions.read
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: customer_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionType'
+      responses:
+        '200':
+          description: Transaction page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Transaction'
+                  meta:
+                    $ref: '#/components/schemas/CursorMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags: [Transactions]
+      operationId: createTransaction
+      summary: Record a manual or integrated sale
+      x-permission: transactions.create
+      parameters:
+        - $ref: '#/components/parameters/BranchIdRequired'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTransactionRequest'
+      responses:
+        '201':
+          description: Transaction, items, derived activity, and outbox events committed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /v1/transactions/{transactionId}:
+    get:
+      tags: [Transactions]
+      operationId: getTransaction
+      summary: Get a transaction and immutable item snapshots
+      x-permission: transactions.read
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+      responses:
+        '200':
+          description: Transaction detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/transactions/{transactionId}/refunds:
+    post:
+      tags: [Transactions]
+      operationId: refundTransaction
+      summary: Append a full or partial refund transaction
+      x-permission: transactions.refund
+      parameters:
+        - $ref: '#/components/parameters/TransactionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRefundRequest'
+      responses:
+        '201':
+          description: Refund created; loyalty reversal and metrics are queued atomically
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /v1/opportunities/summary:
+    get:
+      tags: [Opportunities]
+      operationId: getOpportunitySummary
+      summary: Get aggregate opportunity cards from active customer opportunities
+      x-permission: opportunities.read
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+      responses:
+        '200':
+          description: Opportunity summaries
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OpportunitySummary'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/opportunities:
+    get:
+      tags: [Opportunities]
+      operationId: listCustomerOpportunities
+      summary: Get the actionable per-customer work queue
+      x-permission: opportunities.read
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/OpportunityType'
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/OpportunityStatus'
+        - name: contactable_on_whatsapp
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Opportunity page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomerOpportunity'
+                  meta:
+                    $ref: '#/components/schemas/CursorMeta'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/opportunities/{opportunityId}:
+    get:
+      tags: [Opportunities]
+      operationId: getCustomerOpportunity
+      summary: Get reason, history, permitted actions, and outcome
+      x-permission: opportunities.read
+      parameters:
+        - $ref: '#/components/parameters/OpportunityId'
+      responses:
+        '200':
+          description: Opportunity detail
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CustomerOpportunityDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/opportunities/{opportunityId}/actions:
+    post:
+      tags: [Opportunities]
+      operationId: recordGrowthAction
+      summary: Record WhatsApp, call, staff follow-up, offer, or campaign action
+      x-permission: opportunities.action
+      parameters:
+        - $ref: '#/components/parameters/OpportunityId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGrowthActionRequest'
+      responses:
+        '201':
+          description: Action recorded and opportunity state updated
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/GrowthAction'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationFailed'
+
+  /v1/opportunities/{opportunityId}/dismiss:
+    post:
+      tags: [Opportunities]
+      operationId: dismissCustomerOpportunity
+      summary: Dismiss an opportunity with an auditable reason
+      x-permission: opportunities.dismiss
+      parameters:
+        - $ref: '#/components/parameters/OpportunityId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  minLength: 3
+                  maxLength: 255
+      responses:
+        '200':
+          description: Opportunity dismissed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CustomerOpportunity'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+  /v1/opportunity-definitions:
+    get:
+      tags: [Opportunities]
+      operationId: listOpportunityDefinitions
+      summary: List configured universal recipes and versions
+      x-permission: opportunity_definitions.read
+      responses:
+        '200':
+          description: Definitions
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OpportunityDefinition'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /v1/opportunity-definitions/{definitionId}:
+    patch:
+      tags: [Opportunities]
+      operationId: updateOpportunityDefinition
+      summary: Create a new immutable definition version with updated parameters
+      x-permission: opportunity_definitions.update
+      parameters:
+        - name: definitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOpportunityDefinitionRequest'
+      responses:
+        '200':
+          description: New definition version
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OpportunityDefinition'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    BranchId:
+      name: X-Branch-Id
+      in: header
+      required: false
+      description: Selected branch. Authorization still validates branch scope.
+      schema:
+        type: string
+        format: uuid
+    BranchIdRequired:
+      name: X-Branch-Id
+      in: header
+      required: true
+      description: Transaction branch, validated against the authenticated user's branch scope.
+      schema:
+        type: string
+        format: uuid
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 8
+        maxLength: 128
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+    CustomerId:
+      name: customerId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ImportJobId:
+      name: importJobId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TransactionId:
+      name: transactionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    OpportunityId:
+      name: opportunityId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Authentication required or expired
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Permission or branch scope denied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found in the authenticated organization
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: State, identity, idempotency, or immutable history conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ValidationFailed:
+      description: Request validation failed
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    CustomerStatus:
+      type: string
+      enum: [ACTIVE, INACTIVE, MERGED, ANONYMIZED]
+    IdentifierType:
+      type: string
+      enum: [QR, NFC, RFID, MEMBERSHIP_NUMBER]
+    TransactionType:
+      type: string
+      enum: [SALE, REFUND]
+    OpportunityType:
+      type: string
+      enum: [INACTIVE, FREQUENCY_DECLINE, CROSS_SELL, NEAR_TIER]
+    OpportunityStatus:
+      type: string
+      enum: [OPEN, IN_PROGRESS, ACTIONED, WON, RESOLVED_ORGANIC, DISMISSED, EXPIRED]
+    ImportType:
+      type: string
+      enum: [CUSTOMERS, TRANSACTIONS, TRANSACTION_ITEMS, VISITS]
+    ImportMode:
+      type: string
+      enum: [STRICT, VALID_ROWS_ONLY]
+    Problem:
+      type: object
+      required: [type, title, status, code, request_id]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+        detail:
+          type: string
+        request_id:
+          type: string
+        field_errors:
+          type: array
+          items:
+            type: object
+            required: [field, code, message]
+            properties:
+              field:
+                type: string
+              code:
+                type: string
+              message:
+                type: string
+    CursorMeta:
+      type: object
+      required: [has_more]
+      properties:
+        next_cursor:
+          type: [string, 'null']
+        has_more:
+          type: boolean
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount:
+          type: string
+          pattern: '^-?\d+(\.\d{1,2})?$'
+          example: '1850000.00'
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: IDR
+    CustomerSummary:
+      type: object
+      required: [id, display_name, status, metrics]
+      properties:
+        id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+        primary_phone:
+          type: [string, 'null']
+        primary_email:
+          type: [string, 'null']
+          format: email
+        home_branch:
+          anyOf:
+            - $ref: '#/components/schemas/BranchReference'
+            - type: 'null'
+        status:
+          $ref: '#/components/schemas/CustomerStatus'
+        metrics:
+          $ref: '#/components/schemas/CustomerMetrics'
+        primary_opportunity:
+          anyOf:
+            - $ref: '#/components/schemas/OpportunityReference'
+            - type: 'null'
+    Customer:
+      allOf:
+        - $ref: '#/components/schemas/CustomerSummary'
+        - type: object
+          required: [identifiers, consent, created_at, updated_at]
+          properties:
+            birth_date:
+              type: [string, 'null']
+              format: date
+            identifiers:
+              type: array
+              items:
+                $ref: '#/components/schemas/Identifier'
+            consent:
+              type: array
+              items:
+                $ref: '#/components/schemas/ConsentState'
+            secondary_opportunities:
+              type: array
+              items:
+                $ref: '#/components/schemas/OpportunityReference'
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+    CustomerResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/Customer'
+    CreateCustomerRequest:
+      type: object
+      required: [display_name]
+      properties:
+        display_name:
+          type: string
+          minLength: 2
+          maxLength: 150
+        phone:
+          type: string
+          maxLength: 32
+        email:
+          type: string
+          format: email
+          maxLength: 320
+        birth_date:
+          type: string
+          format: date
+        home_branch_id:
+          type: string
+          format: uuid
+        external_reference:
+          $ref: '#/components/schemas/ExternalCustomerReferenceInput'
+        consent:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentInput'
+        duplicate_decision:
+          type: string
+          enum: [REVIEW, CREATE_NEW]
+          default: REVIEW
+        duplicate_reason:
+          type: string
+          maxLength: 255
+    UpdateCustomerRequest:
+      type: object
+      minProperties: 1
+      properties:
+        display_name:
+          type: string
+          minLength: 2
+          maxLength: 150
+        phone:
+          type: [string, 'null']
+          maxLength: 32
+        email:
+          type: [string, 'null']
+          format: email
+        birth_date:
+          type: [string, 'null']
+          format: date
+        home_branch_id:
+          type: [string, 'null']
+          format: uuid
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE]
+    ExternalCustomerReferenceInput:
+      type: object
+      required: [source_system, external_customer_id]
+      properties:
+        source_system:
+          type: string
+          maxLength: 80
+        external_customer_id:
+          type: string
+          maxLength: 120
+    ConsentInput:
+      type: object
+      required: [purpose, channel, status, source, recorded_at]
+      properties:
+        purpose:
+          type: string
+          enum: [MARKETING, TRANSACTIONAL, LOYALTY]
+        channel:
+          type: string
+          enum: [WHATSAPP, EMAIL, SMS]
+        status:
+          type: string
+          enum: [GRANTED, DENIED, REVOKED]
+        source:
+          type: string
+          maxLength: 80
+        recorded_at:
+          type: string
+          format: date-time
+    ConsentState:
+      allOf:
+        - $ref: '#/components/schemas/ConsentInput'
+        - type: object
+          required: [id]
+          properties:
+            id:
+              type: string
+              format: uuid
+    CustomerMetrics:
+      type: object
+      required: [visit_count_30d, visit_count_90d, net_spend_90d, net_spend_365d, lifetime_value, average_order_value]
+      properties:
+        last_visit_at:
+          type: [string, 'null']
+          format: date-time
+        visit_count_30d:
+          type: integer
+          minimum: 0
+        visit_count_90d:
+          type: integer
+          minimum: 0
+        net_spend_90d:
+          $ref: '#/components/schemas/Money'
+        net_spend_365d:
+          $ref: '#/components/schemas/Money'
+        lifetime_value:
+          $ref: '#/components/schemas/Money'
+        average_order_value:
+          $ref: '#/components/schemas/Money'
+        expected_visit_interval_days:
+          type: [number, 'null']
+          minimum: 0
+        computed_at:
+          type: [string, 'null']
+          format: date-time
+    BranchReference:
+      type: object
+      required: [id, code, name]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+    Identifier:
+      type: object
+      required: [id, type, status, assigned_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/IdentifierType'
+        display_code:
+          type: [string, 'null']
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, LOST]
+        assigned_at:
+          type: string
+          format: date-time
+    AssignIdentifierRequest:
+      type: object
+      required: [type]
+      properties:
+        type:
+          $ref: '#/components/schemas/IdentifierType'
+        display_code:
+          type: string
+          maxLength: 100
+    AssignedIdentifier:
+      allOf:
+        - $ref: '#/components/schemas/Identifier'
+        - type: object
+          properties:
+            scan_url:
+              type: [string, 'null']
+              format: uri
+              description: Returned only for a newly generated QR/NFC/RFID token.
+    MergeCustomerRequest:
+      type: object
+      required: [duplicate_customer_id, reason, field_choices]
+      properties:
+        duplicate_customer_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 255
+        field_choices:
+          type: object
+          additionalProperties:
+            type: string
+            enum: [SURVIVOR, DUPLICATE]
+    DuplicateCandidate:
+      type: object
+      required: [customer, evidence, confidence]
+      properties:
+        customer:
+          $ref: '#/components/schemas/CustomerSummary'
+        evidence:
+          type: array
+          items:
+            type: string
+            enum: [EXTERNAL_REFERENCE, IDENTIFIER, PHONE_AND_NAME, PHONE, EMAIL_AND_NAME, NAME_AND_BIRTH_DATE]
+        confidence:
+          type: string
+          enum: [STRONG, REVIEW]
+    DuplicateReviewResponse:
+      type: object
+      required: [code, candidates]
+      properties:
+        code:
+          type: string
+          const: POSSIBLE_DUPLICATE
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/DuplicateCandidate'
+    TimelineEvent:
+      type: object
+      required: [id, type, occurred_at, title]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [VISIT, TRANSACTION, POINT, SEGMENT, OPPORTUNITY, ACTION, OUTCOME, CONSENT]
+        occurred_at:
+          type: string
+          format: date-time
+        title:
+          type: string
+        description:
+          type: [string, 'null']
+        reference_id:
+          type: [string, 'null']
+          format: uuid
+        metadata:
+          type: object
+          additionalProperties: true
+    ImportJobResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/ImportJob'
+    ImportJob:
+      type: object
+      required: [id, type, mode, filename, status, totals, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/ImportType'
+        mode:
+          $ref: '#/components/schemas/ImportMode'
+        filename:
+          type: string
+        status:
+          type: string
+          enum: [UPLOADED, VALIDATING, NEEDS_REVIEW, READY, COMMITTING, COMPLETED, PARTIAL, FAILED]
+        totals:
+          type: object
+          required: [total, valid, invalid, duplicate, conflict, imported]
+          properties:
+            total:
+              type: integer
+              minimum: 0
+            valid:
+              type: integer
+              minimum: 0
+            invalid:
+              type: integer
+              minimum: 0
+            duplicate:
+              type: integer
+              minimum: 0
+            conflict:
+              type: integer
+              minimum: 0
+            imported:
+              type: integer
+              minimum: 0
+        error_report_available:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: [string, 'null']
+          format: date-time
+    DuplicateDecision:
+      type: object
+      required: [row_id, action]
+      properties:
+        row_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum: [MATCH_EXISTING, CREATE_NEW, SKIP]
+        existing_customer_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          maxLength: 255
+    TransactionItemInput:
+      type: object
+      required: [line_number, service_name, service_category, quantity, unit_amount, line_amount]
+      properties:
+        line_number:
+          type: integer
+          minimum: 1
+        service_id:
+          type: string
+          format: uuid
+        service_code:
+          type: string
+          maxLength: 80
+        service_name:
+          type: string
+          maxLength: 150
+        service_category:
+          type: string
+          maxLength: 100
+        quantity:
+          type: string
+          pattern: '^\d+(\.\d{1,3})?$'
+        unit_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        line_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+    CreateTransactionRequest:
+      type: object
+      required: [customer_id, source_system, external_transaction_id, occurred_at, currency, gross_amount, discount_amount, net_amount]
+      properties:
+        customer_id:
+          type: string
+          format: uuid
+        source_system:
+          type: string
+          maxLength: 80
+          default: MANUAL
+        external_transaction_id:
+          type: string
+          maxLength: 120
+        occurred_at:
+          type: string
+          format: date-time
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        gross_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        discount_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        net_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        create_visit_if_needed:
+          type: boolean
+          default: true
+        items:
+          type: array
+          default: []
+          items:
+            $ref: '#/components/schemas/TransactionItemInput'
+    CreateRefundRequest:
+      type: object
+      required: [source_system, external_refund_id, occurred_at, gross_amount, net_amount, reason]
+      properties:
+        source_system:
+          type: string
+          maxLength: 80
+        external_refund_id:
+          type: string
+          maxLength: 120
+        occurred_at:
+          type: string
+          format: date-time
+        gross_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        net_amount:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 255
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionItemInput'
+    TransactionItem:
+      allOf:
+        - $ref: '#/components/schemas/TransactionItemInput'
+        - type: object
+          required: [id]
+          properties:
+            id:
+              type: string
+              format: uuid
+    Transaction:
+      type: object
+      required: [id, customer_id, branch, source_system, external_transaction_id, type, status, occurred_at, gross, discount, net, items, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        customer_id:
+          type: string
+          format: uuid
+        branch:
+          $ref: '#/components/schemas/BranchReference'
+        source_system:
+          type: string
+        external_transaction_id:
+          type: string
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        status:
+          type: string
+          enum: [COMPLETED, VOIDED]
+        occurred_at:
+          type: string
+          format: date-time
+        gross:
+          $ref: '#/components/schemas/Money'
+        discount:
+          $ref: '#/components/schemas/Money'
+        net:
+          $ref: '#/components/schemas/Money'
+        refund_of_transaction_id:
+          type: [string, 'null']
+          format: uuid
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionItem'
+        created_at:
+          type: string
+          format: date-time
+    TransactionResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/Transaction'
+    OpportunityReference:
+      type: object
+      required: [id, type, status, reason_text]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/OpportunityType'
+        status:
+          $ref: '#/components/schemas/OpportunityStatus'
+        reason_text:
+          type: string
+    OpportunitySummary:
+      type: object
+      required: [definition_id, type, name, priority, customer_count, estimated_value]
+      properties:
+        definition_id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/OpportunityType'
+        name:
+          type: string
+        priority:
+          type: integer
+        customer_count:
+          type: integer
+          minimum: 0
+        estimated_value:
+          $ref: '#/components/schemas/Money'
+    CustomerOpportunity:
+      type: object
+      required: [id, definition_id, type, customer, status, reason_text, reason_data, opened_at, allowed_actions]
+      properties:
+        id:
+          type: string
+          format: uuid
+        definition_id:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/OpportunityType'
+        customer:
+          $ref: '#/components/schemas/CustomerSummary'
+        status:
+          $ref: '#/components/schemas/OpportunityStatus'
+        reason_text:
+          type: string
+        reason_data:
+          type: object
+          additionalProperties: true
+        estimated_value:
+          anyOf:
+            - $ref: '#/components/schemas/Money'
+            - type: 'null'
+        opened_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: [string, 'null']
+          format: date-time
+        allowed_actions:
+          type: array
+          items:
+            type: string
+            enum: [OPEN_WHATSAPP, MARK_CONTACTED, CALL, FOLLOW_UP, RECORD_OFFER, DISMISS]
+    CustomerOpportunityDetail:
+      allOf:
+        - $ref: '#/components/schemas/CustomerOpportunity'
+        - type: object
+          required: [actions, outcomes]
+          properties:
+            actions:
+              type: array
+              items:
+                $ref: '#/components/schemas/GrowthAction'
+            outcomes:
+              type: array
+              items:
+                $ref: '#/components/schemas/GrowthOutcome'
+    CreateGrowthActionRequest:
+      type: object
+      required: [type, channel]
+      properties:
+        type:
+          type: string
+          enum: [WHATSAPP_OPENED, WHATSAPP_MARKED_CONTACTED, PHONE_CALL, STAFF_FOLLOW_UP, OFFER_RECORDED, CAMPAIGN_TOUCH]
+        channel:
+          type: string
+          enum: [WHATSAPP, PHONE, IN_PERSON, OTHER]
+        branch_id:
+          type: string
+          format: uuid
+        campaign_id:
+          type: string
+          format: uuid
+        message_preview:
+          type: string
+          maxLength: 4000
+        performed_at:
+          type: string
+          format: date-time
+    GrowthAction:
+      type: object
+      required: [id, type, channel, status, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [WHATSAPP_OPENED, WHATSAPP_MARKED_CONTACTED, PHONE_CALL, STAFF_FOLLOW_UP, OFFER_RECORDED, CAMPAIGN_TOUCH]
+        channel:
+          type: string
+          enum: [WHATSAPP, PHONE, IN_PERSON, OTHER]
+        status:
+          type: string
+          enum: [NOT_STARTED, OPENED, MARKED_CONTACTED, COMPLETED, CANCELLED]
+        performed_by_id:
+          type: [string, 'null']
+          format: uuid
+        opened_at:
+          type: [string, 'null']
+          format: date-time
+        performed_at:
+          type: [string, 'null']
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    GrowthOutcome:
+      type: object
+      required: [id, classification, transaction_id, attributed_amount, recorded_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        classification:
+          type: string
+          enum: [ORGANIC_RETURN, RETURN_AFTER_ACTION]
+        transaction_id:
+          type: string
+          format: uuid
+        growth_action_id:
+          type: [string, 'null']
+          format: uuid
+        attributed_amount:
+          $ref: '#/components/schemas/Money'
+        recorded_at:
+          type: string
+          format: date-time
+    OpportunityDefinition:
+      type: object
+      required: [id, key, type, parameters, priority, cooldown_days, attribution_window_days, enabled, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        key:
+          type: string
+        type:
+          $ref: '#/components/schemas/OpportunityType'
+        parameters:
+          $ref: '#/components/schemas/OpportunityParameters'
+        priority:
+          type: integer
+          minimum: 0
+        cooldown_days:
+          type: integer
+          minimum: 0
+        attribution_window_days:
+          type: integer
+          minimum: 1
+        enabled:
+          type: boolean
+        version:
+          type: integer
+          minimum: 1
+    UpdateOpportunityDefinitionRequest:
+      type: object
+      minProperties: 1
+      properties:
+        parameters:
+          $ref: '#/components/schemas/OpportunityParameters'
+        priority:
+          type: integer
+          minimum: 0
+        cooldown_days:
+          type: integer
+          minimum: 0
+        attribution_window_days:
+          type: integer
+          minimum: 1
+        enabled:
+          type: boolean
+    OpportunityParameters:
+      oneOf:
+        - $ref: '#/components/schemas/InactiveOpportunityParameters'
+        - $ref: '#/components/schemas/FrequencyDeclineOpportunityParameters'
+        - $ref: '#/components/schemas/CrossSellOpportunityParameters'
+        - $ref: '#/components/schemas/NearTierOpportunityParameters'
+    InactiveOpportunityParameters:
+      type: object
+      required: [inactive_days, minimum_completed_visits, expiry_days]
+      properties:
+        inactive_days:
+          type: integer
+          minimum: 1
+          default: 60
+        minimum_completed_visits:
+          type: integer
+          minimum: 1
+          default: 1
+        expiry_days:
+          type: integer
+          minimum: 1
+          default: 45
+      additionalProperties: false
+    FrequencyDeclineOpportunityParameters:
+      type: object
+      required: [minimum_completed_visits, lookback_days, maximum_gaps, decline_multiplier, minimum_grace_days, maximum_expected_interval_days]
+      properties:
+        minimum_completed_visits:
+          type: integer
+          minimum: 3
+          default: 3
+        lookback_days:
+          type: integer
+          minimum: 30
+          default: 365
+        maximum_gaps:
+          type: integer
+          minimum: 2
+          maximum: 12
+          default: 6
+        decline_multiplier:
+          type: number
+          exclusiveMinimum: 1
+          default: 1.5
+        minimum_grace_days:
+          type: integer
+          minimum: 1
+          default: 7
+        maximum_expected_interval_days:
+          type: integer
+          minimum: 1
+          default: 180
+      additionalProperties: false
+    CrossSellOpportunityParameters:
+      type: object
+      required: [source_category, target_category, source_lookback_days, target_exclusion_days, minimum_source_purchases]
+      properties:
+        source_category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        target_category:
+          type: string
+          minLength: 1
+          maxLength: 100
+        source_lookback_days:
+          type: integer
+          minimum: 1
+          default: 120
+        target_exclusion_days:
+          type: integer
+          minimum: 1
+          default: 365
+        minimum_source_purchases:
+          type: integer
+          minimum: 1
+          default: 1
+        require_branch_availability:
+          type: boolean
+          default: false
+      additionalProperties: false
+    NearTierOpportunityParameters:
+      type: object
+      required: [near_threshold]
+      properties:
+        near_threshold:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+        loyalty_program_id:
+          type: string
+          format: uuid
+      additionalProperties: false
