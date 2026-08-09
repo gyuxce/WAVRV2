@@ -1,6 +1,6 @@
 # Custara — Website, Product Demo & Strategy Resources
 
-Repository ini berisi website marketing Custara, mockup produk inti Custara V1, dan dokumen strategi pemasaran Instagram sebagai referensi terpisah.
+Repository ini berisi website marketing Custara, Demo Produk interaktif yang terhubung melalui navigasi website, dan dokumen strategi pemasaran Instagram sebagai referensi terpisah.
 
 ## Website Custara
 
@@ -10,8 +10,9 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 
 ## Isi repository
 
-- [Mockup Custara V1](mockup/wavr-v1-mockup.html) - buka langsung di browser untuk mencoba dashboard interaktif.
-- [Website Custara](index.html) - website marketing responsif dengan demo alur produk.
+- [Website Custara](index.html) - website marketing responsif dengan akses ke Demo Produk.
+- [Demo Produk Custara](mockup/wavr-v1-mockup.html) - dashboard interaktif yang memakai design system Custara dan memiliki tautan kembali ke website.
+- `demo-custara.css` - lapisan desain bersama untuk menyamakan demo produk dengan website.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 
@@ -29,7 +30,7 @@ Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan Cu
 
 ## Cara menjalankan
 
-Klik `index.html` untuk melihat website, atau buka mockup dari folder `mockup/`. Keduanya berjalan sebagai prototype lokal tanpa backend; data yang disimpan hanya simulasi selama halaman terbuka.
+Klik `index.html`, lalu pilih **Demo Produk** pada navigasi untuk mencoba dashboard interaktif. Keduanya berjalan sebagai prototype lokal tanpa backend; data yang disimpan hanya simulasi selama halaman terbuka.
 
 ## Catatan
 
