@@ -1,6 +1,6 @@
 # WAVR V1 Mockup & Instagram Growth Playbook
 
-Repository ini berisi deliverable mockup WAVR V1 dan playbook pemasaran Instagram untuk tahap awal sales dan marketing.
+Repository ini berisi mockup produk inti WAVR V1 dan dokumen strategi pemasaran Instagram sebagai referensi terpisah.
 
 ## Isi repository
 
@@ -8,13 +8,17 @@ Repository ini berisi deliverable mockup WAVR V1 dan playbook pemasaran Instagra
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 
-## Fitur mockup Instagram Center
+## Fitur mockup WAVR V1
 
-- KPI jangkauan, keterlibatan, lead dari DM, dan booking dari Instagram.
-- Kalender konten dengan simulasi penambahan ide konten.
-- Perencana Meta Ads dengan pilihan objektif, audiens, anggaran, lokasi, dan format kreatif.
-- Detail audiens prospek lokal, audiens hangat, dan pelanggan berizin.
-- Funnel Instagram sampai booking serta pilar konten.
+- Ikhtisar KPI dan kesehatan sistem.
+- Data pelanggan dan profil pelanggan.
+- Transaksi, kunjungan, serta impor data.
+- Loyalitas dan tingkat pelanggan.
+- Segmen berbasis aturan.
+- Kampanye dengan atribusi dan status eksekusi.
+- Pengaturan cabang, peran, dan integrasi.
+
+Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan WAVR kepada owner klinik; Instagram bukan modul produk pada mockup ini.
 
 ## Cara menjalankan mockup
 
