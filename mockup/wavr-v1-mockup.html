@@ -345,7 +345,7 @@
       .wavr-demo-step span { font-size: 8px; }
     }
   </style>
-  <link rel="stylesheet" href="../demo-custara.css?v=20260809-02" />
+  <link rel="stylesheet" href="../demo-custara.css?v=20260809-04" />
 </head>
 <body>
   <div class="wavr-app" id="wavrApp">
@@ -1160,6 +1160,73 @@
     }
 
     renderPage("overview");
+  </script>
+  <script>
+    /* Product experience refinement: keep demo actions business-led, not technical. */
+    function renderDemoBar() {
+      const complete = appState.demo.stepIndex >= demoSteps.length;
+      const current = complete ? { title: "Skenario selesai", description: "Alur dari data pelanggan sampai aksi pertumbuhan sudah berhasil dijalankan." } : demoSteps[appState.demo.stepIndex];
+      return `<section class="wavr-demo-bar" aria-label="Kontrol mode simulasi">
+        <div class="wavr-demo-copy"><span class="wavr-demo-kicker">Mode simulasi</span><h2>${current.title}</h2><p>${current.description}</p></div>
+        <div class="wavr-demo-actions"><button type="button" class="wavr-button" data-action="demo-next">${complete ? "Ulangi alur" : "Lanjutkan alur"} ${icon("arrow", 13)}</button><button type="button" class="wavr-button secondary" data-action="demo-reset">Atur ulang</button></div>
+        <div class="wavr-demo-progress">${demoSteps.map((step, index) => `<div class="wavr-demo-step ${index < appState.demo.stepIndex ? "is-done" : ""} ${index === appState.demo.stepIndex && !complete ? "is-current" : ""}"><div class="wavr-demo-step-line"></div><span>${index + 1}. ${step.label}</span></div>`).join("")}</div>
+      </section>`;
+    }
+
+    function renderOverview() {
+      const actions = `<button type="button" class="wavr-button" data-action="scan"><span data-icon-name="scan"></span>Pindai ID pengenal</button><button type="button" class="wavr-button primary" data-action="add-customer"><span data-icon-name="plus"></span>Tambah pelanggan</button>`;
+      const activityRows = appState.transactions.slice(0, 4).map(tx => {
+        const customer = customerById(tx.customerId);
+        return `<tr><td><div class="wavr-table-person">${avatar(customer)}<div><strong>${customer.name}</strong><span>${tx.date}</span></div></div></td><td><strong>${uiLabel(tx.service)}</strong></td><td>${status(tx.status)}</td><td class="wavr-text-right"><strong>${formatIDR(tx.amount)}</strong></td></tr>`;
+      }).join("");
+      const body = `
+        <section class="wavr-kpi-grid" aria-label="Ringkasan pertumbuhan">
+          <article class="wavr-kpi"><div class="wavr-kpi-top"><span>Cakupan identifikasi</span><span class="wavr-kpi-icon blue">${icon("scan", 16)}</span></div><div class="wavr-kpi-value">68.4%</div><div class="wavr-kpi-foot"><strong>+4.2%</strong><span>vs. 30 hari terakhir</span></div></article>
+          <article class="wavr-kpi"><div class="wavr-kpi-top"><span>Pembelian berulang</span><span class="wavr-kpi-icon teal">${icon("trend", 16)}</span></div><div class="wavr-kpi-value">42.6%</div><div class="wavr-kpi-foot"><strong>+6.8%</strong><span>vs. 30 hari terakhir</span></div></article>
+          <article class="wavr-kpi"><div class="wavr-kpi-top"><span>Tingkat reaktivasi</span><span class="wavr-kpi-icon purple">${icon("trend", 16)}</span></div><div class="wavr-kpi-value">18.7%</div><div class="wavr-kpi-foot"><strong>+2.1%</strong><span>kampanye terakhir</span></div></article>
+          <article class="wavr-kpi"><div class="wavr-kpi-top"><span>Kenaikan pendapatan</span><span class="wavr-kpi-icon orange">${icon("dollar", 16)}</span></div><div class="wavr-kpi-value">+Rp 18,4jt</div><div class="wavr-kpi-foot"><strong>+12.3%</strong><span>dari aksi pertumbuhan</span></div></article>
+        </section>
+        <div class="wavr-grid-2">
+          <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Peluang pertumbuhan</h2><p>Prioritaskan audiens yang paling siap ditindaklanjuti.</p></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat semua segmen ${icon("arrow", 13)}</button></div><div class="wavr-opportunity-list">
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon red">${icon("clock", 18)}</div><div class="wavr-opportunity-main"><strong>Tidak aktif lebih dari 60 hari</strong><span>Reaktivasi dengan penawaran personal dan pengingat.</span></div><div class="wavr-opportunity-value"><strong>86 pelanggan</strong><span>Rp 42,8jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-1">Tinjau</button></div>
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon orange">${icon("trend", 18)}</div><div class="wavr-opportunity-main"><strong>Hampir naik ke tingkat Emas</strong><span>Bantu pelanggan menutup selisih menuju reward.</span></div><div class="wavr-opportunity-value"><strong>24 pelanggan</strong><span>Rp 8,6jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-2">Tinjau</button></div>
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon purple">${icon("users", 18)}</div><div class="wavr-opportunity-main"><strong>Peluang lintas kategori layanan</strong><span>Audiens facial setelah konsultasi.</span></div><div class="wavr-opportunity-value"><strong>42 pelanggan</strong><span>Rp 13,2jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-3">Tinjau</button></div>
+          </div></section>
+          <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Fokus tim hari ini</h2><p>Tiga prioritas untuk mendorong customer kembali.</p></div><span class="wavr-status success">Siap ditindaklanjuti</span></div><div class="wavr-health-list">
+            <div class="wavr-health-row">${icon("users", 17)}<div><strong>86 pelanggan perlu dihubungi</strong><span>Belum berkunjung lebih dari 60 hari</span></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat</button></div>
+            <div class="wavr-health-row">${icon("trend", 17)}<div><strong>24 pelanggan dekat tingkat Emas</strong><span>Saat yang tepat untuk mendorong kunjungan berikutnya</span></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat</button></div>
+            <div class="wavr-health-row">${icon("message", 17)}<div><strong>Kampanye reaktivasi siap ditinjau</strong><span>Audiens dan pesan sudah disiapkan untuk persetujuan</span></div><button type="button" class="wavr-link-button" data-page-link="campaigns">Tinjau</button></div>
+          </div></section>
+        </div>
+        <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Aktivitas terbaru</h2><p>Kunjungan dan layanan pelanggan yang baru tercatat.</p></div><button type="button" class="wavr-link-button" data-page-link="transactions">Lihat aktivitas ${icon("arrow", 13)}</button></div><div class="wavr-table-wrap"><table class="wavr-activity-table"><thead><tr><th>Pelanggan</th><th>Layanan</th><th>Status</th><th class="wavr-text-right">Nilai</th></tr></thead><tbody>${activityRows}</tbody></table></div></section>`;
+      return renderShellPage("Selamat pagi, Andra", "Cabang Senopati · Sabtu, 09 Agustus 2026", actions, body);
+    }
+
+    function renderSegments() {
+      const actions = `<button type="button" class="wavr-button" data-action="evaluate-segments"><span data-icon-name="clock"></span>Evaluasi sekarang</button><button type="button" class="wavr-button primary" data-action="new-segment"><span data-icon-name="plus"></span>Segmen baru</button>`;
+      const segments = [
+        ["01", "REAKTIVASI", "Tidak aktif >60 hari", "Pelanggan yang belum kembali dalam 60 hari terakhir.", 86, "Rp 42,8jt"],
+        ["02", "NILAI PELANGGAN", "Nilai tinggi", "Pelanggan dengan kontribusi belanja paling besar.", 38, "Rp 31,4jt"],
+        ["03", "LOYALITAS", "Hampir naik tingkat", "Pelanggan yang tinggal sedikit lagi menuju tingkat berikutnya.", 24, "Rp 8,6jt"],
+        ["04", "KEBIASAAN", "Sering berkunjung", "Pelanggan dengan tiga kunjungan atau lebih dalam 90 hari.", 112, "Rp 27,9jt"],
+        ["05", "LAYANAN", "Peluang lintas layanan", "Pelanggan konsultasi yang siap menerima rekomendasi layanan lanjutan.", 42, "Rp 13,2jt"],
+        ["06", "MOMEN", "Ulang tahun bulan ini", "Audiens ulang tahun dengan persetujuan komunikasi aktif.", 17, "Rp 4,1jt"]
+      ];
+      const cards = segments.map(([index, label, name, description, count, value]) => `<button type="button" class="wavr-segment-card" data-action="open-segment" data-segment="${name}"><span class="wavr-segment-index">${index}</span><span class="wavr-segment-label">${label}</span><h3>${name}</h3><p>${description}</p><span class="wavr-segment-meta"><span><strong>${count}</strong> pelanggan</span><span>${value} potensi ${icon("arrow", 12)}</span></span></button>`).join("");
+      const body = `<section class="wavr-panel wavr-segments-panel"><div class="wavr-panel-head"><div><h2>Segmen berbasis aturan</h2><p>Pilih segmen untuk melihat audiens dan lanjutkan menjadi aksi yang lebih relevan.</p></div><span class="wavr-status success">Terakhir dievaluasi 8 menit lalu</span></div><div class="wavr-segment-grid">${cards}</div></section>`;
+      return renderShellPage("Segmen", "Ubah perilaku menjadi audiens yang dapat ditindaklanjuti tim pertumbuhan.", actions, body);
+    }
+
+    function openNotificationsModal() {
+      document.querySelector(".wavr-notification-dot")?.remove();
+      openModal("Perhatian hari ini", "Prioritas customer growth yang dapat ditinjau oleh owner dan tim marketing.", `<div class="wavr-health-list">
+        <div class="wavr-health-row">${icon("users", 17)}<div><strong>86 pelanggan bernilai tinggi mulai tidak aktif</strong><span>Siapkan pesan reaktivasi yang terasa personal.</span></div>${status("Ready")}</div>
+        <div class="wavr-health-row">${icon("trend", 17)}<div><strong>24 pelanggan mendekati tingkat Emas</strong><span>Gunakan momen ini untuk mendorong kunjungan berikutnya.</span></div>${status("Ready")}</div>
+        <div class="wavr-health-row">${icon("message", 17)}<div><strong>Kampanye reaktivasi menunggu persetujuan</strong><span>Audience dan pesan sudah siap untuk ditinjau.</span></div>${status("Queued")}</div>
+      </div>`, `<button type="button" class="wavr-button primary" data-action="close-modal">Tutup</button>`);
+    }
+
+    renderPage(appState.page);
   </script>
 </body>
 </html>
