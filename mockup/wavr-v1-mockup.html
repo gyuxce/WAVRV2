@@ -345,7 +345,7 @@
       .wavr-demo-step span { font-size: 8px; }
     }
   </style>
-  <link rel="stylesheet" href="../demo-custara.css?v=20260809-04" />
+  <link rel="stylesheet" href="../demo-custara.css?v=20260809-05" />
 </head>
 <body>
   <div class="wavr-app" id="wavrApp">
@@ -361,7 +361,7 @@
         <button type="button" data-page="transactions"><span class="wavr-nav-icon"></span><span>Transaksi</span></button>
         <button type="button" data-page="loyalty"><span class="wavr-nav-icon"></span><span>Loyalitas</span></button>
         <button type="button" data-page="segments"><span class="wavr-nav-icon"></span><span>Segmen</span></button>
-        <button type="button" data-page="campaigns"><span class="wavr-nav-icon"></span><span>Kampanye</span><span class="wavr-nav-count">3</span></button>
+        <button type="button" data-page="campaigns"><span class="wavr-nav-icon"></span><span>Kampanye</span></button>
         <button type="button" data-page="settings"><span class="wavr-nav-icon"></span><span>Pengaturan</span></button>
       </nav>
       <div class="wavr-sidebar-bottom">
@@ -378,7 +378,6 @@
           <button type="button" class="wavr-button primary wavr-demo-launch" data-action="start-demo"><span data-icon-name="spark"></span><span id="demoButtonLabel">Mulai simulasi</span></button>
           <button type="button" class="wavr-button small wavr-global-scan" data-action="scan"><span data-icon-name="scan"></span>Pindai ID</button>
           <button type="button" class="wavr-icon-button" aria-label="Cari" data-action="focus-search"><span class="wavr-nav-icon" data-icon-name="search"></span></button>
-          <button type="button" class="wavr-icon-button" aria-label="Notifikasi" data-action="notifications"><span class="wavr-nav-icon" data-icon-name="bell"></span><span class="wavr-notification-dot"></span></button>
           <div class="wavr-top-avatar"><div class="wavr-avatar">AN</div><div><strong>Andra Nugraha</strong><span>Pemilik / Admin</span></div></div>
         </div>
       </header>
@@ -486,7 +485,7 @@
     function customerById(id) { return appState.customers.find(customer => customer.id === id); }
 
     function avatar(customer, extra = "") {
-      return `<div class="wavr-avatar ${extra}">${customer.initials || initials(customer.name)}</div>`;
+      return `<span class="wavr-person-icon ${extra}" aria-label="${customer.name}">${icon("users", 16)}</span>`;
     }
 
     function status(text) {
@@ -1063,10 +1062,6 @@
       closeModal(); showToast(`${name} siap ditukar dengan ${points} poin`);
     }
 
-    function openNotificationsModal() {
-      openModal("Notifikasi", "Pembaruan yang perlu diperhatikan tim hari ini.", `<div class="wavr-health-list"><div class="wavr-health-row">${icon("message", 17)}<div><strong>Kampanye lintas layanan siap ditinjau</strong><span>42 pelanggan · dibuat 12 menit lalu</span></div>${status("Ready")}</div><div class="wavr-health-row">${icon("upload", 17)}<div><strong>Impor POS selesai</strong><span>18 transaksi · tidak ada duplikat</span></div>${status("Synced")}</div><div class="wavr-health-row">${icon("shield", 17)}<div><strong>Cakupan persetujuan meningkat</strong><span>+3,2% dibanding 30 hari terakhir</span></div>${status("Success")}</div></div>`, `<button type="button" class="wavr-button primary" data-action="close-modal">Tutup</button>`);
-    }
-
     function openSegmentModal(segmentName) {
       const samples = {
         "Tidak aktif >60 hari": ["Nadia Prameswari", "Sinta Lestari", "Maya Kurnia"],
@@ -1156,7 +1151,6 @@
       if (action === "save-settings") showToast("Pengaturan tersimpan untuk cabang Senopati");
       if (action === "export-ledger") showToast("Ledger poin demo siap diekspor sebagai CSV");
       if (action === "retry-provider") { closeModal(); showToast("Percobaan ulang berhasil - pesan masuk antrean"); }
-      if (action === "notifications") openNotificationsModal();
     }
 
     renderPage("overview");
@@ -1188,11 +1182,11 @@
         </section>
         <div class="wavr-grid-2">
           <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Peluang pertumbuhan</h2><p>Prioritaskan audiens yang paling siap ditindaklanjuti.</p></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat semua segmen ${icon("arrow", 13)}</button></div><div class="wavr-opportunity-list">
-            <div class="wavr-opportunity"><div class="wavr-opportunity-icon red">${icon("clock", 18)}</div><div class="wavr-opportunity-main"><strong>Tidak aktif lebih dari 60 hari</strong><span>Reaktivasi dengan penawaran personal dan pengingat.</span></div><div class="wavr-opportunity-value"><strong>86 pelanggan</strong><span>Rp 42,8jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-1">Tinjau</button></div>
-            <div class="wavr-opportunity"><div class="wavr-opportunity-icon orange">${icon("trend", 18)}</div><div class="wavr-opportunity-main"><strong>Hampir naik ke tingkat Emas</strong><span>Bantu pelanggan menutup selisih menuju reward.</span></div><div class="wavr-opportunity-value"><strong>24 pelanggan</strong><span>Rp 8,6jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-2">Tinjau</button></div>
-            <div class="wavr-opportunity"><div class="wavr-opportunity-icon purple">${icon("users", 18)}</div><div class="wavr-opportunity-main"><strong>Peluang lintas kategori layanan</strong><span>Audiens facial setelah konsultasi.</span></div><div class="wavr-opportunity-value"><strong>42 pelanggan</strong><span>Rp 13,2jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-3">Tinjau</button></div>
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon">${icon("users", 17)}</div><div class="wavr-opportunity-main"><strong>Tidak aktif lebih dari 60 hari</strong><span>Reaktivasi dengan penawaran personal dan pengingat.</span></div><div class="wavr-opportunity-value"><strong>86 pelanggan</strong><span>Rp 42,8jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-1">Tinjau</button></div>
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon">${icon("trend", 17)}</div><div class="wavr-opportunity-main"><strong>Hampir naik ke tingkat Emas</strong><span>Bantu pelanggan menutup selisih menuju reward.</span></div><div class="wavr-opportunity-value"><strong>24 pelanggan</strong><span>Rp 8,6jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-2">Tinjau</button></div>
+            <div class="wavr-opportunity"><div class="wavr-opportunity-icon">${icon("message", 17)}</div><div class="wavr-opportunity-main"><strong>Peluang lintas kategori layanan</strong><span>Audiens facial setelah konsultasi.</span></div><div class="wavr-opportunity-value"><strong>42 pelanggan</strong><span>Rp 13,2jt potensi</span></div><button type="button" class="wavr-button small" data-action="run-campaign" data-campaign="cmp-3">Tinjau</button></div>
           </div></section>
-          <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Fokus tim hari ini</h2><p>Tiga prioritas untuk mendorong customer kembali.</p></div><span class="wavr-status success">Siap ditindaklanjuti</span></div><div class="wavr-health-list">
+          <section class="wavr-panel"><div class="wavr-panel-head"><div><h2>Fokus tim hari ini</h2><p>Tiga prioritas untuk mendorong customer kembali.</p></div></div><div class="wavr-health-list">
             <div class="wavr-health-row">${icon("users", 17)}<div><strong>86 pelanggan perlu dihubungi</strong><span>Belum berkunjung lebih dari 60 hari</span></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat</button></div>
             <div class="wavr-health-row">${icon("trend", 17)}<div><strong>24 pelanggan dekat tingkat Emas</strong><span>Saat yang tepat untuk mendorong kunjungan berikutnya</span></div><button type="button" class="wavr-link-button" data-page-link="segments">Lihat</button></div>
             <div class="wavr-health-row">${icon("message", 17)}<div><strong>Kampanye reaktivasi siap ditinjau</strong><span>Audiens dan pesan sudah disiapkan untuk persetujuan</span></div><button type="button" class="wavr-link-button" data-page-link="campaigns">Tinjau</button></div>
@@ -1212,18 +1206,10 @@
         ["05", "LAYANAN", "Peluang lintas layanan", "Pelanggan konsultasi yang siap menerima rekomendasi layanan lanjutan.", 42, "Rp 13,2jt"],
         ["06", "MOMEN", "Ulang tahun bulan ini", "Audiens ulang tahun dengan persetujuan komunikasi aktif.", 17, "Rp 4,1jt"]
       ];
-      const cards = segments.map(([index, label, name, description, count, value]) => `<button type="button" class="wavr-segment-card" data-action="open-segment" data-segment="${name}"><span class="wavr-segment-index">${index}</span><span class="wavr-segment-label">${label}</span><h3>${name}</h3><p>${description}</p><span class="wavr-segment-meta"><span><strong>${count}</strong> pelanggan</span><span>${value} potensi ${icon("arrow", 12)}</span></span></button>`).join("");
+      const segmentIcons = ["users", "trend", "gift", "users", "message", "gift"];
+      const cards = segments.map(([index, label, name, description, count, value], position) => `<button type="button" class="wavr-segment-card" data-action="open-segment" data-segment="${name}"><span class="wavr-segment-index">${index}</span><span class="wavr-segment-top"><span class="wavr-segment-icon">${icon(segmentIcons[position], 16)}</span><span class="wavr-segment-label">${label}</span></span><h3>${name}</h3><p>${description}</p><span class="wavr-segment-meta"><span><strong>${count}</strong> pelanggan</span><span>${value} potensi ${icon("arrow", 12)}</span></span></button>`).join("");
       const body = `<section class="wavr-panel wavr-segments-panel"><div class="wavr-panel-head"><div><h2>Segmen berbasis aturan</h2><p>Pilih segmen untuk melihat audiens dan lanjutkan menjadi aksi yang lebih relevan.</p></div><span class="wavr-status success">Terakhir dievaluasi 8 menit lalu</span></div><div class="wavr-segment-grid">${cards}</div></section>`;
       return renderShellPage("Segmen", "Ubah perilaku menjadi audiens yang dapat ditindaklanjuti tim pertumbuhan.", actions, body);
-    }
-
-    function openNotificationsModal() {
-      document.querySelector(".wavr-notification-dot")?.remove();
-      openModal("Perhatian hari ini", "Prioritas customer growth yang dapat ditinjau oleh owner dan tim marketing.", `<div class="wavr-health-list">
-        <div class="wavr-health-row">${icon("users", 17)}<div><strong>86 pelanggan bernilai tinggi mulai tidak aktif</strong><span>Siapkan pesan reaktivasi yang terasa personal.</span></div>${status("Ready")}</div>
-        <div class="wavr-health-row">${icon("trend", 17)}<div><strong>24 pelanggan mendekati tingkat Emas</strong><span>Gunakan momen ini untuk mendorong kunjungan berikutnya.</span></div>${status("Ready")}</div>
-        <div class="wavr-health-row">${icon("message", 17)}<div><strong>Kampanye reaktivasi menunggu persetujuan</strong><span>Audience dan pesan sudah siap untuk ditinjau.</span></div>${status("Queued")}</div>
-      </div>`, `<button type="button" class="wavr-button primary" data-action="close-modal">Tutup</button>`);
     }
 
     renderPage(appState.page);
