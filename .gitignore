@@ -3,4 +3,5 @@ node_modules/
 .env.*
 !.env.example
 apps/api/src/generated/
+apps/api/dist/
 *.log

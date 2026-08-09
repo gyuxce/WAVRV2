@@ -99,15 +99,18 @@ erDiagram
     ORGANIZATION ||--o{ INTEGRATION_CONNECTION : configures
     ORGANIZATION ||--o{ OUTBOX_EVENT : emits
     ORGANIZATION ||--o{ AUDIT_LOG : records
+    ORGANIZATION ||--o{ IDEMPOTENCY_RECORD : protects_retries
     ORGANIZATION_USER ||--o{ AUDIT_LOG : performs
 ```
 
 Key decisions:
 
 - Organization context comes from authenticated server context, never trusted directly from request payloads.
+- `USER.auth_subject` maps the Supabase Auth JWT `sub` to a Custara user; an active organization membership is still required.
 - Branch access is checked through role permission plus branch scope.
 - Import rows remain staged until validation and duplicate decisions are complete.
 - Outbox events are inserted in the same database transaction as core changes.
+- Idempotency records are scoped by organization, method, route, and key so safe retries return the original response.
 - Audit, consent, customer merge, and point ledger histories are append-only at database level.
 
 ## Critical constraints
@@ -123,6 +126,7 @@ Key decisions:
 | Refund must reference another transaction | Database check constraint + service validation |
 | End time cannot precede start time | Database check constraint |
 | Ledger/consent/merge/audit mutation blocked | PostgreSQL trigger |
+| Retry does not duplicate a completed write | Durable idempotency record |
 | Tenant and branch access | API authorization; RLS planned as defense-in-depth |
 
 ## Transaction boundaries

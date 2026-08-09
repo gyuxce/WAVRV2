@@ -7,7 +7,8 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: env("DATABASE_URL"),
-    shadowDatabaseUrl: env("SHADOW_DATABASE_URL"),
+    // DATABASE_URL is used by the API runtime; DIRECT_URL is preferred for Prisma migrations.
+    url: process.env.DIRECT_URL ?? env("DATABASE_URL"),
+    shadowDatabaseUrl: process.env.SHADOW_DATABASE_URL ?? process.env.DIRECT_URL,
   },
 });

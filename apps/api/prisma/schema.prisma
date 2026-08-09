@@ -258,6 +258,7 @@ model Organization {
   integrationConnections     IntegrationConnection[]
   outboxEvents               OutboxEvent[]
   auditLogs                  AuditLog[]
+  idempotencyRecords         IdempotencyRecord[]
 
   @@map("organizations")
 }
@@ -286,6 +287,7 @@ model Branch {
 
 model User {
   id              String     @id @default(uuid()) @db.Uuid
+  authSubject     String?    @unique @map("auth_subject") @db.Uuid
   email           String     @db.VarChar(320)
   normalizedEmail String     @unique @map("normalized_email") @db.VarChar(320)
   name            String     @db.VarChar(150)
@@ -982,4 +984,23 @@ model AuditLog {
   @@index([organizationId, entityType, entityId, createdAt(sort: Desc)], map: "audit_logs_entity_time_idx")
   @@index([organizationId, actorId, createdAt(sort: Desc)], map: "audit_logs_actor_time_idx")
   @@map("audit_logs")
+}
+
+model IdempotencyRecord {
+  id             String   @id @default(uuid()) @db.Uuid
+  organizationId String   @map("organization_id") @db.Uuid
+  key            String   @db.VarChar(120)
+  method         String   @db.VarChar(12)
+  route          String   @db.VarChar(255)
+  requestHash    String   @map("request_hash") @db.VarChar(64)
+  statusCode     Int      @map("status_code")
+  responseBody   Json     @map("response_body") @db.JsonB
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  expiresAt      DateTime @map("expires_at") @db.Timestamptz(3)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, key, method, route], map: "idempotency_records_scope_key")
+  @@index([expiresAt], map: "idempotency_records_expiry_idx")
+  @@map("idempotency_records")
 }

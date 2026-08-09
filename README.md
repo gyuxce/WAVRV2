@@ -18,6 +18,7 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 - [ERD final Custara V1](docs/product/custara-v1-erd.md) - relasi database dan batas domain implementatif.
 - [OpenAPI Custara V1](docs/product/openapi-v1.yaml) - kontrak Customer, Import, Transaction, dan Opportunity.
 - [Fondasi API + Prisma](apps/api/) - schema PostgreSQL, migration awal, dan konfigurasi Prisma 7.
+- [Runtime API + Supabase setup](docs/product/custara-v1-runtime.md) - arsitektur runtime, tenant context, Auth, Storage, dan deployment.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 
@@ -35,7 +36,7 @@ Playbook Instagram di folder `docs/` adalah dokumen strategi untuk memasarkan Cu
 
 ## Cara menjalankan
 
-Klik `index.html`, lalu pilih **Demo Produk** pada navigasi untuk mencoba dashboard interaktif. Keduanya berjalan sebagai prototype lokal tanpa backend; data yang disimpan hanya simulasi selama halaman terbuka.
+Klik `index.html`, lalu pilih **Demo Produk** pada navigasi untuk mencoba dashboard interaktif. Website dan demo UI masih berjalan sebagai prototype lokal; runtime backend Custara tersedia di `apps/api` dan membutuhkan project Supabase untuk dijalankan penuh.
 
 ## Catatan
 

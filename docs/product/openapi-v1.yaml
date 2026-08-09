@@ -8,6 +8,7 @@ info:
   description: |
     REST contract for the Custara V1 customer growth loop.
     Organization context is resolved from the authenticated session/token.
+    If the authenticated user belongs to more than one organization, clients must send X-Organization-Id.
     Clients must not send or trust organization IDs in business payloads.
 servers:
   - url: https://api.custara.online
