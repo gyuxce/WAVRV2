@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Mockup interaktif Custara V1" />
   <title>Custara — Demo Produk</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/custara-mark.svg" />
+  <link rel="apple-touch-icon" href="../assets/custara-mark.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet" />
@@ -345,14 +347,13 @@
       .wavr-demo-step span { font-size: 8px; }
     }
   </style>
-  <link rel="stylesheet" href="../demo-custara.css?v=20260809-05" />
+  <link rel="stylesheet" href="../demo-custara.css?v=20260809-06" />
 </head>
 <body>
   <div class="wavr-app" id="wavrApp">
     <aside class="wavr-sidebar" aria-label="Navigasi utama">
       <div class="wavr-brand">
-        <div class="wavr-brand-mark">w/</div>
-        <div class="wavr-brand-text"><strong>Custara</strong><span>Customer Growth Platform</span></div>
+        <img class="wavr-brand-logo" src="../assets/custara-logo-light.svg" alt="Custara" />
       </div>
       <div class="wavr-nav-label">Ruang kerja</div>
       <nav class="wavr-nav" id="mainNav">
@@ -618,6 +619,7 @@
       appState.page = page;
       const pageRenderers = { overview: renderOverview, customers: renderCustomers, transactions: renderTransactions, loyalty: renderLoyalty, segments: renderSegments, campaigns: renderCampaigns, settings: renderSettings };
       const pageRoot = document.getElementById("pageRoot");
+      pageRoot.dataset.page = page;
       pageRoot.innerHTML = (pageRenderers[page] || renderOverview)();
       if (appState.demo.active) pageRoot.insertAdjacentHTML("afterbegin", renderDemoBar());
       document.getElementById("breadcrumbCurrent").textContent = uiLabel(page.charAt(0).toUpperCase() + page.slice(1));
@@ -900,7 +902,7 @@
       const actions = `<button type="button" class="wavr-button" data-action="import-csv"><span data-icon-name="upload"></span>Impor CSV</button><button type="button" class="wavr-button primary" data-action="add-transaction"><span data-icon-name="plus"></span>Tambah transaksi</button>`;
       const rows = appState.transactions.map(tx => transactionRow(tx)).join("");
       const body = `<section class="wavr-notice">${icon("shield", 16)}<span>POS tetap menjadi sumber kebenaran. Pengulangan impor aman karena setiap transaksi memakai <strong>source_system + external_transaction_id</strong> sebagai kunci idempotensi.</span></section><section class="wavr-panel"><div class="wavr-search-bar"><div class="wavr-search-input">${icon("search", 16)}<input class="wavr-input" id="transactionSearch" type="search" placeholder="Cari transaksi, pelanggan, atau layanan" autocomplete="off" /></div><select class="wavr-select" aria-label="Sumber transaksi"><option>Semua sumber</option><option>Manual</option><option>API POS</option><option>Impor CSV</option></select></div><div class="wavr-panel-head"><div><h2>Log transaksi <span class="wavr-text-muted">· ${appState.transactions.length} data</span></h2><p>Setiap transaksi terhubung ke pelanggan dan entri loyalitas.</p></div><span class="wavr-status success">Idempotensi aktif</span></div><div class="wavr-table-wrap"><table class="wavr-data-table"><thead><tr><th>Pelanggan</th><th>Aktivitas</th><th>Sumber</th><th>Status</th><th class="wavr-text-right">Nilai</th></tr></thead><tbody id="transactionTableBody">${rows}</tbody></table></div></section>`;
-      return renderShellPage("Transaksi", "Catat kunjungan dan pendapatan tanpa kehilangan sumber kebenaran.", actions, body);
+      return renderShellPage("Transaksi", "Pantau kunjungan dan pendapatan dalam satu tempat.", actions, body);
     }
 
     function renderLoyalty() {

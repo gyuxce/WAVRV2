@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Custara">
+  <g transform="translate(19 19) rotate(-9 128 128)">
+    <rect x="40" y="40" width="176" height="176" rx="48" fill="#17212d"/>
+    <rect x="55" y="55" width="146" height="146" rx="40" fill="none" stroke="#71d5ca" stroke-width="14"/>
+    <circle cx="170" cy="171" r="18" fill="#eea04a"/>
+  </g>
+</svg>

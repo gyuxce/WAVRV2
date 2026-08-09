@@ -71,7 +71,8 @@ p { color: var(--ink-soft); }
 
 .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(217, 221, 216, .76); background: rgba(247, 245, 240, .91); backdrop-filter: blur(14px); }
 .nav-wrap { display: flex; align-items: center; justify-content: space-between; min-height: 74px; gap: 24px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-size: 21px; font-weight: 700; letter-spacing: -.06em; }
+.brand { display: inline-flex; align-items: center; color: var(--ink); }
+.brand-logo { display: block; width: 138px; height: auto; }
 .brand-mark { position: relative; width: 25px; height: 25px; border: 2px solid var(--teal); border-radius: 8px 8px 8px 3px; transform: rotate(-9deg); }
 .brand-mark::before { position: absolute; width: 5px; height: 5px; right: 4px; bottom: 4px; border-radius: 50%; background: var(--orange); content: ""; }
 .nav-links { display: flex; align-items: center; gap: 26px; margin-left: auto; color: #495562; font-size: 13px; font-weight: 600; }
