@@ -8,6 +8,7 @@ import { runIdempotent } from "../idempotency.js";
 import { importJob } from "../serializers.js";
 import { asRecord, csvBoolean, normalizeEmail, normalizeName, normalizePhone, parseCsv, parseDate, parseDateOnly, parseDecimal, safeFileName, hashPayload } from "../utils.js";
 import { duplicateCandidates } from "./customers.js";
+import { recomputeCustomerMetric } from "./transactions.js";
 
 type ImportType = "CUSTOMERS" | "TRANSACTIONS" | "TRANSACTION_ITEMS" | "VISITS";
 type ImportMode = "STRICT" | "VALID_ROWS_ONLY";
@@ -173,6 +174,7 @@ async function commitRows(prisma: PrismaClient, organizationId: string, jobId: s
   try {
     const result = await prisma.$transaction(async (tx) => {
       let importedRows = 0;
+      const metricCustomerIds = new Set<string>();
       for (const row of job.rows) {
         if (row.status !== "VALID") continue;
         const data = row.normalizedData as any;
@@ -191,6 +193,7 @@ async function commitRows(prisma: PrismaClient, organizationId: string, jobId: s
           targetId = transaction.id;
           await tx.visit.create({ data: { organizationId, branchId: data.branchId, customerId: data.customerId, sourceSystem: data.sourceSystem, type: "TRANSACTION_DERIVED", startedAt: new Date(data.occurredAt), status: "COMPLETED", derivedFromTransactionId: transaction.id } });
           await tx.outboxEvent.create({ data: { organizationId, eventType: data.type === "REFUND" ? "transaction.refunded" : "transaction.created", aggregateType: "TRANSACTION", aggregateId: transaction.id, payload: { transaction_id: transaction.id, customer_id: data.customerId }, status: "PENDING" } });
+          metricCustomerIds.add(data.customerId);
         } else if (job.type === "TRANSACTION_ITEMS") {
           const transaction = await tx.transaction.findFirst({ where: { organizationId, sourceSystem: data.sourceSystem, externalTransactionId: data.externalTransactionId }, select: { id: true } });
           if (!transaction) throw conflict("TRANSACTION_NOT_FOUND", `Transaksi ${data.externalTransactionId} belum ditemukan.`);
@@ -208,9 +211,10 @@ async function commitRows(prisma: PrismaClient, organizationId: string, jobId: s
         await tx.importRow.update({ where: { id: row.id }, data: { status: "IMPORTED", targetEntityId: targetId, targetEntityType: row.targetEntityType, errorCodes: [] } });
         importedRows += 1;
       }
+      for (const customerId of metricCustomerIds) await recomputeCustomerMetric(tx, organizationId, customerId);
       const status = job.invalidRows || job.duplicateRows || job.conflictRows || job.rows.some((row: any) => row.status === "SKIPPED_DUPLICATE") ? "PARTIAL" : "COMPLETED";
       return tx.importJob.update({ where: { id: jobId }, data: { status, importedRows, completedAt: new Date() } });
-    });
+    }, { maxWait: 15_000, timeout: 300_000 });
     await prisma.auditLog.create({ data: { organizationId, actorId, action: "IMPORT_COMMITTED", entityType: "IMPORT_JOB", entityId: jobId, afterData: { imported_rows: result.importedRows }, source: "API", requestId } });
     return result;
   } catch (error) {

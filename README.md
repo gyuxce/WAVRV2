@@ -19,6 +19,7 @@ Untuk menjalankan secara lokal, buka `index.html` melalui browser atau jalankan 
 - [OpenAPI Custara V1](docs/product/openapi-v1.yaml) - kontrak Customer, Import, Transaction, dan Opportunity.
 - [Fondasi API + Prisma](apps/api/) - schema PostgreSQL, migration awal, dan konfigurasi Prisma 7.
 - [Runtime API + Supabase setup](docs/product/custara-v1-runtime.md) - arsitektur runtime, tenant context, Auth, Storage, dan deployment.
+- [Checklist UAT Pilot V1](docs/product/custara-v1-pilot-uat.md) - skenario uji satu tenant dan satu cabang sebelum pilot nyata.
 - [Playbook Instagram & Meta Ads (PDF)](docs/wavr-instagram-growth-meta-ads-playbook.pdf)
 - [Playbook Instagram & Meta Ads (DOCX)](docs/wavr-instagram-growth-meta-ads-playbook.docx)
 

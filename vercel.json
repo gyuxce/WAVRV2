@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "app.custara.online"
+        }
+      ],
+      "destination": "/mockup/custara-mockup.html?mode=client"
+    },
+    {
+      "source": "/app",
+      "destination": "/mockup/custara-mockup.html?mode=client"
+    },
+    {
+      "source": "/demo",
+      "destination": "/mockup/custara-mockup.html"
+    }
+  ]
+}

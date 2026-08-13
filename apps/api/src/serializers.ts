@@ -37,12 +37,14 @@ export function opportunityReference(opportunity: AnyRecord | null | undefined) 
 
 export function customerSummary(customer: AnyRecord, currency = "IDR") {
   const activeOpportunities = (customer.opportunities ?? []).filter((item: AnyRecord) => ["OPEN", "IN_PROGRESS", "ACTIONED"].includes(item.status));
+  const latestWhatsappConsent = (customer.consentRecords ?? []).find((consent: AnyRecord) => consent.purpose === "MARKETING" && consent.channel === "WHATSAPP");
   return {
     id: customer.id,
     display_name: customer.displayName,
     primary_phone: customer.primaryPhone ?? null,
     primary_email: customer.primaryEmail ?? null,
     home_branch: branchReference(customer.homeBranch),
+    whatsapp_consent: latestWhatsappConsent?.status === "GRANTED",
     status: customer.status,
     metrics: customerMetrics(customer.metric, currency),
     primary_opportunity: opportunityReference(activeOpportunities[0]),
@@ -169,6 +171,7 @@ export function customerOpportunity(opportunity: AnyRecord, currency = "IDR") {
     estimated_value: opportunity.estimatedValue == null ? null : money(opportunity.estimatedValue, currency),
     opened_at: opportunity.openedAt.toISOString(),
     expires_at: opportunity.expiresAt?.toISOString?.() ?? null,
+    last_action: opportunity.actions?.[0] ? growthAction(opportunity.actions[0]) : null,
     allowed_actions: [...new Set(allowedActions)],
   };
 }

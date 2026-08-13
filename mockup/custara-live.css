@@ -72,6 +72,38 @@
   background: #fff;
 }
 
+.custara-live-import-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 16px 0;
+  padding: 12px 13px;
+  border: 1px solid #dbe7e3;
+  border-radius: 11px;
+  background: #f7fbfa;
+}
+
+.custara-live-import-help div {
+  display: grid;
+  gap: 4px;
+}
+
+.custara-live-import-help strong {
+  color: #2b4540;
+  font-size: 12px;
+}
+
+.custara-live-import-help span {
+  color: #71817c;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 520px) {
+  .custara-live-import-help { align-items: flex-start; flex-direction: column; }
+}
+
 .custara-live-actions {
   display: grid;
   gap: 10px;
@@ -138,6 +170,42 @@
   background: #19aa98;
 }
 
+.custara-live-status.is-loading {
+  border-color: #cfe6e1;
+  color: #387d74;
+  background: #f4fbf9;
+}
+
+.custara-live-status.is-loading::before {
+  background: #19aa98;
+  animation: custara-live-pulse 1s ease-in-out infinite;
+}
+
+.custara-live-spinner {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: custara-live-spin .7s linear infinite;
+}
+
+.wavr-button.is-loading {
+  cursor: wait;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+@keyframes custara-live-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes custara-live-pulse {
+  50% { opacity: .35; }
+}
+
 .custara-live-logout {
   padding: 8px 10px;
   border: 0;
@@ -161,7 +229,133 @@
   margin-top: 12px;
 }
 
+.custara-live-filter-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.8fr) repeat(3, minmax(150px, 1fr));
+  gap: 12px;
+  padding: 4px 0 18px;
+  border-bottom: 1px solid #e8efec;
+}
+
+.custara-live-filter-field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.custara-live-filter-field > span {
+  color: #66756f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.custara-live-filter-field > label {
+  color: #66756f;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.custara-live-filter-field .wavr-search-input {
+  min-height: 42px;
+}
+
+.custara-live-filter-field .wavr-input,
+.custara-live-filter-field .wavr-select {
+  min-height: 42px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.custara-live-filter-grid .wavr-input,
+.custara-live-filter-grid .wavr-select {
+  position: relative;
+  z-index: 1;
+}
+
+.custara-live-filter-grid .wavr-search-input svg {
+  pointer-events: none;
+}
+
+.wavr-segment-card[data-action="live-browse-opportunity"] {
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.wavr-segment-card[data-action="live-browse-opportunity"]:hover,
+.wavr-segment-card[data-action="live-browse-opportunity"]:focus-visible {
+  border-color: #8ad7cb;
+  box-shadow: 0 8px 22px rgba(24, 137, 124, 0.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.custara-live-filter-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  color: #74837e;
+  font-size: 11px;
+}
+
+.custara-live-row-actions,
+.custara-live-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+}
+
+.custara-live-row-actions .wavr-button,
+.custara-live-profile-actions .wavr-button {
+  white-space: nowrap;
+}
+
+.custara-live-whatsapp {
+  border-color: #b8e4d8 !important;
+  color: #147d70 !important;
+  background: #effbf8 !important;
+  text-decoration: none;
+}
+
+.custara-live-opportunity-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding: 13px 15px;
+  border: 1px solid #dbe7e3;
+  border-radius: 12px;
+  background: #f7fbfa;
+}
+
+.custara-live-opportunity-toolbar > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.custara-live-opportunity-toolbar strong {
+  color: #273934;
+  font-size: 13px;
+}
+
+.custara-live-opportunity-toolbar span {
+  color: #73837d;
+  font-size: 11px;
+}
+
 @media (max-width: 900px) {
   .custara-live-status { display: none; }
   .custara-live-logout { display: none; }
+  .custara-live-filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .custara-live-filter-grid { grid-template-columns: 1fr; }
+  .custara-live-filter-summary,
+  .custara-live-opportunity-toolbar { align-items: flex-start; flex-direction: column; }
+  .custara-live-profile-actions { justify-content: flex-start; }
 }

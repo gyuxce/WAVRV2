@@ -8,10 +8,19 @@ import { customerOpportunity, growthAction, growthOutcome, money, opportunityDef
 import { decodeCursor, encodeCursor, parseDate, parseDecimal } from "../utils.js";
 
 const activeStatuses = ["OPEN", "IN_PROGRESS", "ACTIONED"] as const;
+const opportunityRefreshInFlight = new Map<string, Promise<void>>();
+
+type OpportunityEvaluationContext = {
+  transactionsByCustomer: Map<string, any[]>;
+  visitsByCustomer: Map<string, number>;
+  availableCategories: string[];
+  activeOpportunityKeys: Set<string>;
+};
 
 const opportunityInclude = {
   definition: true,
-  customer: { include: { homeBranch: true, metric: true, opportunities: { where: { status: { in: activeStatuses as any } }, include: { definition: true }, orderBy: { openedAt: "desc" }, take: 5 } } },
+  actions: { orderBy: { createdAt: "desc" }, take: 1 },
+  customer: { include: { homeBranch: true, metric: true, consentRecords: { orderBy: { recordedAt: "desc" } }, opportunities: { where: { status: { in: activeStatuses as any } }, include: { definition: true }, orderBy: { openedAt: "desc" }, take: 5 } } },
 } as any;
 
 function contextOf(request: FastifyRequest) {
@@ -39,11 +48,10 @@ export async function ensureDefaultDefinitions(prisma: PrismaClient, organizatio
   return definitions;
 }
 
-async function evaluateCustomer(prisma: PrismaClient, organizationId: string, customer: any, definitions: any[]) {
+async function evaluateCustomer(prisma: PrismaClient, organizationId: string, customer: any, definitions: any[], evaluation: OpportunityEvaluationContext) {
   const now = new Date();
-  const transactions = await prisma.transaction.findMany({ where: { organizationId, customerId: customer.id, status: "COMPLETED", type: "SALE" }, include: { items: true }, orderBy: { occurredAt: "desc" }, take: 500 });
-  const visits = await prisma.visit.count({ where: { organizationId, customerId: customer.id, status: "COMPLETED" } });
-  const purchasedCategories = new Set(transactions.flatMap((transaction: any) => transaction.items.map((item: any) => item.serviceCategorySnapshot)));
+  const transactions = evaluation.transactionsByCustomer.get(customer.id) ?? [];
+  const visits = evaluation.visitsByCustomer.get(customer.id) ?? 0;
   for (const definition of definitions) {
     if (!definition.enabled) continue;
     const params = definition.parameters as Record<string, any>;
@@ -67,11 +75,13 @@ async function evaluateCustomer(prisma: PrismaClient, organizationId: string, cu
       const sourceTransactions = transactions.filter((transaction: any) => transaction.occurredAt >= lookback && transaction.items.some((item: any) => params.source_category === "ANY" || item.serviceCategorySnapshot.toLowerCase() === String(params.source_category).toLowerCase()));
       const targetCutoff = new Date(now.getTime() - Number(params.target_exclusion_days) * 24 * 60 * 60 * 1000);
       const recentCategories = new Set(transactions.filter((transaction: any) => transaction.occurredAt >= targetCutoff).flatMap((transaction: any) => transaction.items.map((item: any) => item.serviceCategorySnapshot)));
-      const available = await prisma.service.findMany({ where: { organizationId, status: "ACTIVE", ...(params.target_category !== "ANY" ? { category: { equals: params.target_category, mode: "insensitive" } } : {}) }, select: { category: true }, distinct: ["category"], take: 20 });
-      const target = available.find((item) => !recentCategories.has(item.category));
+      const availableCategories = params.target_category === "ANY"
+        ? evaluation.availableCategories
+        : evaluation.availableCategories.filter((category) => category.toLowerCase() === String(params.target_category).toLowerCase());
+      const target = availableCategories.find((category) => !recentCategories.has(category));
       qualified = sourceTransactions.length >= Number(params.minimum_source_purchases) && Boolean(target);
-      reasonText = target ? `Peluang memperkenalkan kategori ${target.category}` : "Peluang lintas kategori layanan";
-      reasonData = { source_category: params.source_category, target_category: target?.category ?? params.target_category, source_purchases: sourceTransactions.length, recent_categories: [...recentCategories] };
+      reasonText = target ? `Peluang memperkenalkan kategori ${target}` : "Peluang lintas kategori layanan";
+      reasonData = { source_category: params.source_category, target_category: target ?? params.target_category, source_purchases: sourceTransactions.length, recent_categories: [...recentCategories] };
     } else if (definition.type === "NEAR_TIER") {
       const programId = params.loyalty_program_id as string | undefined;
       const account = await prisma.loyaltyAccount.findFirst({ where: { organizationId, customerId: customer.id, ...(programId ? { programId } : {}) }, include: { currentTier: true, program: true } });
@@ -83,16 +93,52 @@ async function evaluateCustomer(prisma: PrismaClient, organizationId: string, cu
       }
     }
     if (!qualified) continue;
-    const active = await prisma.customerOpportunity.findFirst({ where: { organizationId, definitionId: definition.id, customerId: customer.id, status: { in: activeStatuses as any } } });
-    if (active) continue;
+    const activeKey = `${definition.id}:${customer.id}`;
+    if (evaluation.activeOpportunityKeys.has(activeKey)) continue;
     await prisma.customerOpportunity.create({ data: { organizationId, definitionId: definition.id, customerId: customer.id, status: "OPEN", reasonText, reasonData: reasonData as any, estimatedValue: customer.metric?.averageOrderValue ?? null, openedAt: now, expiresAt: new Date(now.getTime() + (Number(params.expiry_days) || 45) * 24 * 60 * 60 * 1000) } }).catch((error: unknown) => { if ((error as { code?: string } | null)?.code !== "P2002") throw error; });
+    evaluation.activeOpportunityKeys.add(activeKey);
   }
 }
 
 export async function refreshOpportunityQueue(prisma: PrismaClient, organizationId: string) {
-  const definitions = await ensureDefaultDefinitions(prisma, organizationId);
-  const customers = await prisma.customer.findMany({ where: { organizationId, status: "ACTIVE" }, include: { metric: true }, take: 500 });
-  for (const customer of customers) await evaluateCustomer(prisma, organizationId, customer, definitions);
+  const running = opportunityRefreshInFlight.get(organizationId);
+  if (running) return running;
+  const task = (async () => {
+    const [definitions, customers] = await Promise.all([
+      ensureDefaultDefinitions(prisma, organizationId),
+      prisma.customer.findMany({ where: { organizationId, status: "ACTIVE" }, include: { metric: true }, take: 500 }),
+    ]);
+    const customerIds = customers.map((customer) => customer.id);
+    if (!customerIds.length) return;
+    const [transactions, visits, services, activeOpportunities] = await Promise.all([
+      prisma.transaction.findMany({ where: { organizationId, customerId: { in: customerIds }, status: "COMPLETED", type: "SALE" }, include: { items: true }, orderBy: { occurredAt: "desc" } }),
+      prisma.visit.findMany({ where: { organizationId, customerId: { in: customerIds }, status: "COMPLETED" }, select: { customerId: true } }),
+      prisma.service.findMany({ where: { organizationId, status: "ACTIVE" }, select: { category: true }, distinct: ["category"], take: 20 }),
+      prisma.customerOpportunity.findMany({ where: { organizationId, customerId: { in: customerIds }, status: { in: activeStatuses as any } }, select: { definitionId: true, customerId: true } }),
+    ]);
+    const transactionsByCustomer = new Map<string, any[]>();
+    for (const transaction of transactions) {
+      const customerTransactions = transactionsByCustomer.get(transaction.customerId) ?? [];
+      customerTransactions.push(transaction);
+      transactionsByCustomer.set(transaction.customerId, customerTransactions);
+    }
+    const visitsByCustomer = new Map<string, number>();
+    for (const visit of visits) visitsByCustomer.set(visit.customerId, (visitsByCustomer.get(visit.customerId) ?? 0) + 1);
+    const activeOpportunityKeys = new Set(activeOpportunities.map((opportunity) => `${opportunity.definitionId}:${opportunity.customerId}`));
+    const evaluation = {
+      transactionsByCustomer,
+      visitsByCustomer,
+      availableCategories: services.map((service) => service.category),
+      activeOpportunityKeys,
+    } satisfies OpportunityEvaluationContext;
+    for (const customer of customers) await evaluateCustomer(prisma, organizationId, customer, definitions, evaluation);
+  })();
+  opportunityRefreshInFlight.set(organizationId, task);
+  try {
+    await task;
+  } finally {
+    if (opportunityRefreshInFlight.get(organizationId) === task) opportunityRefreshInFlight.delete(organizationId);
+  }
 }
 
 export async function registerOpportunityRoutes(app: FastifyInstance, prisma: PrismaClient, ttlDays: number) {
@@ -175,6 +221,43 @@ export async function registerOpportunityRoutes(app: FastifyInstance, prisma: Pr
         return created;
       });
       return { statusCode: 201, body: { data: growthAction(action) } };
+    } });
+    reply.code(result.statusCode).send(result.body);
+  });
+
+  app.post("/v1/opportunities/:opportunityId/outcomes", async (request, reply) => {
+    const context = contextOf(request);
+    assertPermission(context, "opportunities.action");
+    const { opportunityId } = request.params as { opportunityId: string };
+    const body = request.body as { transaction_id?: string; classification?: string; growth_action_id?: string };
+    const key = request.headers["idempotency-key"] as string | undefined;
+    const result = await runIdempotent({ prisma, context, key, method: "POST", route: `/v1/opportunities/${opportunityId}/outcomes`, payload: body, ttlDays, operation: async () => {
+      if (!body.transaction_id) throw validationFailed("transaction_id wajib diisi.");
+      if (!body.classification || !["ORGANIC_RETURN", "RETURN_AFTER_ACTION"].includes(body.classification)) throw validationFailed("classification tidak valid.");
+      const opportunity = await prisma.customerOpportunity.findFirst({ where: { id: opportunityId, organizationId: context.organizationId }, include: { definition: true } }) as any;
+      if (!opportunity) throw notFound("Opportunity");
+      if (!["OPEN", "IN_PROGRESS", "ACTIONED"].includes(opportunity.status)) throw conflict("OPPORTUNITY_NOT_RESOLVABLE", "Opportunity sudah ditutup atau sudah memiliki hasil.");
+      const transaction = await prisma.transaction.findFirst({ where: { id: body.transaction_id, organizationId: context.organizationId, customerId: opportunity.customerId, status: "COMPLETED", type: "SALE" } }) as any;
+      if (!transaction) throw notFound("Transaksi customer yang valid");
+      if (transaction.occurredAt < opportunity.openedAt) throw validationFailed("Transaksi harus terjadi setelah opportunity dibuka.");
+      const existing = await prisma.growthOutcome.findUnique({ where: { transactionId: transaction.id } });
+      if (existing) throw conflict("OUTCOME_ALREADY_RECORDED", "Transaksi ini sudah dipakai untuk mencatat hasil opportunity.");
+      let growthActionId = body.growth_action_id ?? null;
+      if (growthActionId) {
+        const action = await prisma.growthAction.findFirst({ where: { id: growthActionId, organizationId: context.organizationId, customerOpportunityId: opportunityId } });
+        if (!action) throw validationFailed("growth_action_id tidak terkait dengan opportunity ini.");
+      } else {
+        const latestAction = await prisma.growthAction.findFirst({ where: { organizationId: context.organizationId, customerOpportunityId: opportunityId }, orderBy: { createdAt: "desc" }, select: { id: true } });
+        growthActionId = latestAction?.id ?? null;
+      }
+      const nextStatus = body.classification === "RETURN_AFTER_ACTION" ? "WON" : "RESOLVED_ORGANIC";
+      const outcome = await prisma.$transaction(async (tx) => {
+        const created = await tx.growthOutcome.create({ data: { organizationId: context.organizationId, customerId: opportunity.customerId, customerOpportunityId: opportunityId, growthActionId, transactionId: transaction.id, classification: body.classification as any, attributedAmount: transaction.netAmount, attributionWindowDays: opportunity.definition.attributionWindowDays }, include: { transaction: true } });
+        await tx.customerOpportunity.update({ where: { id: opportunityId }, data: { status: nextStatus as any, resolvedAt: new Date() } });
+        await tx.auditLog.create({ data: { organizationId: context.organizationId, actorId: context.organizationUserId, action: "OPPORTUNITY_OUTCOME_RECORDED", entityType: "CUSTOMER_OPPORTUNITY", entityId: opportunityId, afterData: { growth_outcome_id: created.id, transaction_id: transaction.id, classification: body.classification }, source: "API", requestId: request.id } });
+        return created;
+      });
+      return { statusCode: 201, body: { data: growthOutcome(outcome) } };
     } });
     reply.code(result.statusCode).send(result.body);
   });

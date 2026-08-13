@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mockup interaktif Custara V1" />
-  <title>Custara — Demo Produk</title>
+  <base href="/mockup/" />
+  <meta name="description" content="Interactive Custara V1 customer growth workspace" />
+  <title>Custara — Customer Growth Platform</title>
   <link rel="canonical" href="https://www.custara.online/mockup/custara-mockup.html" />
-  <meta property="og:locale" content="id_ID" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Custara" />
   <meta property="og:url" content="https://www.custara.online/mockup/custara-mockup.html" />
-  <meta property="og:title" content="Custara — Demo Produk" />
-  <meta property="og:description" content="Jelajahi cara Custara membaca customer signal dan mengubahnya menjadi growth action." />
+  <meta property="og:title" content="Custara — Customer Growth Platform" />
+  <meta property="og:description" content="See how Custara turns customer signals into measurable growth actions." />
   <meta property="og:image" content="https://www.custara.online/assets/custara-og.png" />
   <meta property="og:image:secure_url" content="https://www.custara.online/assets/custara-og.png" />
   <meta property="og:image:type" content="image/png" />
@@ -19,8 +20,8 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Custara — Demo Produk" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Custara — Demo Produk" />
-  <meta name="twitter:description" content="Jelajahi cara Custara membaca customer signal dan mengubahnya menjadi growth action." />
+  <meta name="twitter:title" content="Custara — Customer Growth Platform" />
+  <meta name="twitter:description" content="See how Custara turns customer signals into measurable growth actions." />
   <meta name="twitter:image" content="https://www.custara.online/assets/custara-og.png" />
   <link rel="icon" type="image/svg+xml" href="../assets/custara-mark.svg" />
   <link rel="apple-touch-icon" href="../assets/custara-mark.png" />
@@ -143,6 +144,8 @@
     .wavr-button:hover { border-color: #cbd5e7; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(28,46,85,0.06); }
     .wavr-button.primary { background: var(--wavr-teal); border-color: var(--wavr-teal); color: white; box-shadow: 0 7px 16px rgba(24,182,170,0.2); }
     .wavr-button.primary:hover { background: #12a499; border-color: #12a499; }
+    .wavr-button:disabled, .wavr-button[aria-disabled="true"] { cursor: not-allowed; opacity: .58; transform: none; box-shadow: none; }
+    .wavr-button.primary:disabled, .wavr-button.primary[aria-disabled="true"] { background: #8bbab4; border-color: #8bbab4; }
     .wavr-button.dark { background: var(--wavr-ink); color: white; border-color: var(--wavr-ink); }
     .wavr-button.danger { color: var(--wavr-red); }
     .wavr-button.small { padding: 7px 10px; font-size: 11px; }
@@ -278,6 +281,8 @@
     .wavr-toast { position: fixed; right: 25px; bottom: 25px; background: var(--wavr-ink); color: #fff; padding: 13px 16px; border-radius: 10px; box-shadow: var(--wavr-shadow); display: flex; align-items: center; gap: 9px; z-index: 20; transform: translateY(20px); opacity: 0; pointer-events: none; transition: 0.22s ease; font-size: 12px; }
     .wavr-toast.is-visible { transform: translateY(0); opacity: 1; }
     .wavr-toast svg { color: #6fe4bd; }
+    .wavr-toast.is-loading svg { color: #9fe8dd; animation: wavr-toast-spin .8s linear infinite; }
+    @keyframes wavr-toast-spin { to { transform: rotate(360deg); } }
 
     .wavr-empty { padding: 42px 18px; text-align: center; color: var(--wavr-muted); }
     .wavr-empty svg { color: #bcc7d7; width: 30px; height: 30px; margin-bottom: 8px; }
@@ -365,7 +370,7 @@
     }
   </style>
   <link rel="stylesheet" href="../demo-custara.css?v=20260809-06" />
-  <link rel="stylesheet" href="custara-live.css?v=20260810-01" />
+  <link rel="stylesheet" href="custara-live.css?v=20260811-02" />
 </head>
 <body>
   <div class="wavr-app" id="wavrApp">
@@ -373,29 +378,28 @@
       <div class="wavr-brand">
         <img class="wavr-brand-logo" src="../assets/custara-logo-light.svg" alt="Custara" />
       </div>
-      <div class="wavr-nav-label">Ruang kerja</div>
+      <div class="wavr-nav-label">Workspace</div>
       <nav class="wavr-nav" id="mainNav">
-        <button type="button" data-page="overview" class="is-active"><span class="wavr-nav-icon"></span><span>Ikhtisar</span></button>
-        <button type="button" data-page="customers"><span class="wavr-nav-icon"></span><span>Pelanggan</span></button>
-        <button type="button" data-page="transactions"><span class="wavr-nav-icon"></span><span>Transaksi</span></button>
-        <button type="button" data-page="loyalty"><span class="wavr-nav-icon"></span><span>Loyalitas</span></button>
-        <button type="button" data-page="segments"><span class="wavr-nav-icon"></span><span>Segmen</span></button>
-        <button type="button" data-page="campaigns"><span class="wavr-nav-icon"></span><span>Kampanye</span></button>
-        <button type="button" data-page="settings"><span class="wavr-nav-icon"></span><span>Pengaturan</span></button>
+        <button type="button" data-page="overview" class="is-active"><span class="wavr-nav-icon"></span><span>Overview</span></button>
+        <button type="button" data-page="customers"><span class="wavr-nav-icon"></span><span>Customers</span></button>
+        <button type="button" data-page="transactions"><span class="wavr-nav-icon"></span><span>Transactions</span></button>
+        <button type="button" data-page="loyalty"><span class="wavr-nav-icon"></span><span>Loyalty</span></button>
+        <button type="button" data-page="segments"><span class="wavr-nav-icon"></span><span>Opportunities</span></button>
+        <button type="button" data-page="campaigns"><span class="wavr-nav-icon"></span><span>Campaigns</span></button>
+        <button type="button" data-page="settings"><span class="wavr-nav-icon"></span><span>Settings</span></button>
       </nav>
       <div class="wavr-sidebar-bottom">
-        <div class="wavr-branch-card"><small>Cabang aktif</small><strong>Senopati · Cabang 01</strong></div>
-        <div class="wavr-user"><div class="wavr-avatar">AN</div><div><strong>Andra Nugraha</strong><span>Pemilik / Admin</span></div></div>
+        <div class="wavr-branch-card"><small>Active branch</small><strong>Senopati · Branch 01</strong></div>
+        <div class="wavr-user"><div class="wavr-avatar">AN</div><div><strong>Andra Nugraha</strong><span>Owner / Admin</span></div></div>
       </div>
     </aside>
 
     <main class="wavr-main">
       <header class="wavr-topbar">
-        <div class="wavr-breadcrumb"><span>Custara /</span><strong id="breadcrumbCurrent">Ikhtisar</strong></div>
+        <div class="wavr-breadcrumb"><span>Custara /</span><strong id="breadcrumbCurrent">Overview</strong></div>
         <div class="wavr-topbar-actions">
-          <a class="wavr-back-site" href="../index.html">Kembali ke website</a>
-          <button type="button" class="wavr-button primary wavr-demo-launch" data-action="start-demo"><span data-icon-name="spark"></span><span id="demoButtonLabel">Mulai simulasi</span></button>
-          <button type="button" class="wavr-button small wavr-global-scan" data-action="scan"><span data-icon-name="scan"></span>Pindai ID</button>
+          <button type="button" class="wavr-button primary wavr-demo-launch" data-action="start-demo"><span data-icon-name="spark"></span><span id="demoButtonLabel">Start walkthrough</span></button>
+          <button type="button" class="wavr-button small wavr-global-scan" data-action="scan"><span data-icon-name="scan"></span>Scan ID</button>
           <button type="button" class="wavr-icon-button" aria-label="Cari" data-action="focus-search"><span class="wavr-nav-icon" data-icon-name="search"></span></button>
           <div class="wavr-top-avatar"><div class="wavr-avatar">AN</div><div><strong>Andra Nugraha</strong><span>Pemilik / Admin</span></div></div>
         </div>
@@ -487,13 +491,58 @@
     }
 
     const uiLabels = {
-      "Overview": "Ikhtisar", "Customers": "Pelanggan", "Transactions": "Transaksi", "Loyalty": "Loyalitas", "Segments": "Segmen", "Campaigns": "Kampanye", "Settings": "Pengaturan",
-      "Bronze": "Perunggu", "Silver": "Perak", "Gold": "Emas", "High value": "Nilai tinggi", "Inactive >60d": "Tidak aktif >60 hari", "Near tier": "Hampir naik tingkat", "Frequent visitor": "Sering berkunjung", "Service cross-sell": "Peluang lintas layanan", "Birthday this month": "Ulang tahun bulan ini", "New customer": "Pelanggan baru",
-      "Recorded": "Tercatat", "Imported": "Diimpor", "Refunded": "Dikembalikan", "Ready": "Siap", "Queued": "Dalam antrean", "Connected": "Terhubung", "Synced": "Tersinkron", "Configured": "Terkonfigurasi", "Active": "Aktif", "All systems healthy": "Semua sistem sehat", "Ledger healthy": "Ledger sehat", "Idempotency active": "Idempotensi aktif", "Consent active": "Persetujuan aktif", "No marketing consent": "Belum ada persetujuan pemasaran",
-      "Manual": "Manual", "POS API": "API POS", "CSV import": "Impor CSV", "Identifier scan": "Pindai ID pengenal", "Manual front desk": "Manual oleh meja depan", "POS import": "Impor POS", "Task": "Tugas", "WhatsApp": "WhatsApp", "Email": "Email", "Skin Consultation": "Konsultasi kulit", "Body Sculpt": "Pembentukan tubuh", "Acne Peel": "Peeling jerawat"
+      "Overview": "Overview", "Customers": "Customers", "Transactions": "Transactions", "Loyalty": "Loyalty", "Segments": "Opportunities", "Campaigns": "Campaigns", "Settings": "Settings",
+      "Bronze": "Bronze", "Silver": "Silver", "Gold": "Gold", "High value": "High value", "Inactive >60d": "No return for 60+ days", "Near tier": "Close to next tier", "Frequent visitor": "Frequent visitor", "Service cross-sell": "Next-service opportunity", "Birthday this month": "Birthday this month", "New customer": "New customer",
+      "Recorded": "Recorded", "Imported": "Imported", "Refunded": "Refunded", "Ready": "Ready", "Queued": "Queued", "Connected": "Connected", "Synced": "Synced", "Configured": "Configured", "Active": "Active", "All systems healthy": "All systems healthy", "Ledger healthy": "Points ledger healthy", "Idempotency active": "Duplicate-safe", "Consent active": "WhatsApp allowed", "No marketing consent": "WhatsApp permission needed",
+      "Manual": "Manual", "POS API": "POS API", "CSV import": "CSV import", "Identifier scan": "ID scan", "Manual front desk": "Front desk", "POS import": "POS import", "Task": "Task", "WhatsApp": "WhatsApp", "Email": "Email", "Skin Consultation": "Skin consultation", "Body Sculpt": "Body sculpt", "Acne Peel": "Acne peel"
     };
 
     function uiLabel(value) { return uiLabels[value] || value; }
+
+    const dashboardCopy = [
+      ["Pindai ID pengenal", "Scan ID"], ["Tambah pelanggan", "Add customer"], ["Cari customer", "Search customers"], ["Daftar customer", "Customer list"], ["Semua pelanggan", "All customers"],
+      ["Pelanggan", "Customers"], ["Transaksi", "Transactions"], ["Loyalitas", "Loyalty"], ["Kampanye", "Campaigns"], ["Pengaturan", "Settings"], ["Segmen", "Opportunities"], ["Peluang", "Opportunities"], ["Ringkasan", "Overview"],
+      ["Menu utama", "Workspace"], ["Cabang aktif", "Active branch"], ["Pemilik / Admin", "Owner / Admin"], ["Ikhtisar", "Overview"], ["Keluar", "Sign out"], ["Mulai simulasi", "Start walkthrough"], ["Mode simulasi", "Walkthrough mode"],
+      ["Lihat semua segmen", "View all opportunities"], ["Lihat customer", "View customers"], ["Lihat audiens", "View audience"], ["Buka daftar customer", "Open customer list"], ["Cari dan tindak lanjuti customer dari satu tempat.", "Find and follow up with customers from one workspace."],
+      ["Peluang pertumbuhan", "Growth opportunities"], ["Peluang berdasarkan perilaku", "Behavior-based opportunities"], ["Peluang utama", "Primary opportunity"], ["Peluang lintas kategori layanan", "Next-service opportunity"], ["Peluang lintas layanan", "Next-service opportunity"],
+      ["Tidak aktif lebih dari 60 hari", "No return for 60+ days"], ["Tidak aktif >60 hari", "No return for 60+ days"], ["Tidak aktif &gt;60 hari", "No return for 60+ days"], ["Hampir naik ke tingkat Emas", "Close to Gold"], ["Hampir naik tingkat", "Close to next tier"], ["Nilai tinggi", "High value"], ["Sering berkunjung", "Frequent visitor"], ["Ulang tahun bulan ini", "Birthday this month"],
+      ["Fokus tim hari ini", "Team focus today"], ["Aktivitas terbaru", "Recent activity"], ["Kesehatan integrasi", "Integration health"], ["Konteks workspace", "Workspace context"], ["Semua sistem sehat", "All systems healthy"], ["Terhubung ke data", "Connected to data"], ["Data nyata", "Live data"], ["Terhubung", "Connected"], ["Tersinkron", "Synced"],
+      ["Tinjau", "Review"], ["Lihat", "View"], ["Tutup", "Close"], ["Batal", "Cancel"], ["Simpan", "Save"], ["Simpan perubahan", "Save changes"], ["Buat kunjungan", "Create visit"], ["Tambah transaksi", "Add transaction"], ["Impor CSV", "Import CSV"], ["Impor data", "Import data"], ["Unduh daftar", "Export list"], ["Ekspor", "Export"],
+      ["Cari nama, nomor telepon, atau ID pengenal", "Search name, phone, or ID"], ["Nama, nomor, atau ID pengenal", "Name, phone, or ID"], ["Semua segmen", "All opportunities"], ["Semua cabang", "All branches"], ["Semua status", "All statuses"], ["Boleh dihubungi lewat WhatsApp", "WhatsApp permission"], ["Boleh dihubungi", "Allowed to contact"], ["Belum ada izin", "Permission needed"], ["Belum ada izin WhatsApp", "WhatsApp permission needed"],
+      ["Pilih peluang dan cabang untuk menentukan siapa yang perlu ditindaklanjuti.", "Choose an opportunity and branch to decide who needs follow-up."], ["Link WhatsApp hanya muncul untuk customer yang memberi izin.", "WhatsApp links appear only for customers who gave permission."], ["Coba ubah kata pencarian atau filter.", "Try changing your search or filters."], ["Belum ada customer yang cocok", "No matching customers"],
+      ["Perbarui peluang", "Refresh opportunities"], ["Perbarui data", "Refresh data"], ["Belum ada peluang aktif", "No active opportunities yet"], ["Belum ada transaksi tercatat", "No recorded transactions"], ["Belum ada transaksi pada tenant ini.", "No transactions in this workspace yet."], ["Belum ada data untuk ditampilkan.", "No data to display yet."],
+      ["Tindak lanjut tersimpan", "Follow-up saved"], ["Belum dihubungi", "Not contacted"], ["Sudah dihubungi", "Contacted"], ["WhatsApp dibuka", "WhatsApp opened"], ["Catat hasil kunjungan", "Record visit outcome"], ["Tutup peluang", "Close opportunity"], ["Belum ada tindak lanjut", "No follow-up yet"], ["Customer sudah dihubungi", "Customer contacted"], ["WhatsApp sudah dibuka", "WhatsApp opened"],
+      ["Belum kembali", "Did not return"], ["Customer kembali", "Customer returned"], ["Simpan hasil kembali", "Save return outcome"], ["Simpan: customer kembali", "Save: customer returned"], ["Menunggu transaksi baru", "Waiting for a new transaction"], ["Kembali setelah dihubungi", "Returned after follow-up"], ["Kembali dengan sendirinya", "Returned on their own"], ["Transaksi yang menandakan customer sudah kembali", "Transaction confirming customer returned"], ["Bagaimana customer kembali?", "How did the customer return?"],
+      ["Berhasil", "Success"], ["Gagal", "Failed"], ["Data demo dikembalikan ke kondisi awal", "Demo data reset to its starting state"], ["Mode demo ditutup", "Walkthrough closed"], ["Uji error ID", "Test ID error"], ["Uji penyedia", "Test provider"], ["Atur ulang", "Reset"], ["Lanjutkan alur", "Continue walkthrough"], ["Ulangi alur", "Restart walkthrough"],
+      ["Tahap berikutnya", "Next step"], ["Kembali ke ikhtisar", "Back to overview"], ["Fitur loyalitas belum diaktifkan untuk workspace ini.", "Loyalty is not enabled for this workspace yet."], ["Belum ada kampanye tersimpan.", "No campaigns saved yet."], ["Pengaturan lanjutan akan tersedia setelah kebutuhan pilot ditetapkan.", "Advanced settings will be available once pilot needs are defined."],
+      ["Mode demo", "Demo mode"], ["Data nyata terhubung", "Live data connected"], ["Menghubungkan", "Connecting"], ["Memuat data", "Loading data"], ["Memperbarui data", "Refreshing data"], ["Menyimpan", "Saving"], ["Memproses", "Processing"], ["File import belum dapat disimpan.", "Import file could not be saved."], ["Token Supabase tidak dapat diverifikasi.", "Supabase token could not be verified."],
+      ["Hubungkan data Custara", "Connect Custara data"], ["Masuk untuk melihat customer, transaksi, dan peluang pertumbuhan dari Supabase.", "Sign in to view customers, transactions, and growth opportunities from Supabase."], ["Masuk ke workspace", "Sign in to workspace"], ["Lanjutkan dengan data demo", "Continue with demo data"], ["Data demo tetap tersedia jika kamu ingin menjelajahi UI tanpa login.", "Demo data is available if you want to explore the UI without signing in."], ["email owner", "owner email"], ["Pindai ID pengenal", "Scan ID"],
+      ["Pelanggan yang belum kembali dalam 60 hari terakhir.", "Customers with no recorded visit in the last 60 days."], ["Pelanggan dengan kontribusi belanja paling besar.", "Customers with the highest spend contribution."], ["Pelanggan yang tinggal sedikit lagi menuju tingkat berikutnya.", "Customers close to the next tier."], ["Pelanggan dengan tiga kunjungan atau lebih dalam 90 hari.", "Customers with three or more visits in 90 days."],
+      ["Terakhir dievaluasi", "Last evaluated"], ["Segmen berbasis aturan", "Rule-based opportunities"], ["Ubah perilaku menjadi audiens yang dapat ditindaklanjuti", "Turn behavior into audiences your team can act on"], ["Customer yang menunjukkan pola ini dan bisa segera ditindaklanjuti.", "Customers showing this pattern and ready for follow-up."],
+      ["Prioritas berdasarkan data customer yang tersimpan.", "Prioritized from stored customer behavior."], ["Diambil dari aturan Custara dan data tenant nyata.", "Based on Custara rules and live workspace data."], ["Import customer dan transaksi terlebih dahulu agar Custara dapat membaca pola pertumbuhan.", "Import customers and transactions so Custara can read growth patterns."], ["Tambah data customer dan transaksi, lalu klik perbarui.", "Add customer and transaction data, then refresh."], ["Daftar customer yang sedang punya peluang untuk ditindaklanjuti.", "Customers with an active opportunity for follow-up."], ["Temukan customer yang paling siap diajak kembali.", "Find the customers most ready to return."], ["Customer yang dapat dibuka di WhatsApp", "Customers who can be contacted on WhatsApp"], ["Riwayat follow-up di tenant", "Follow-up history in this workspace"], ["Pengiriman otomatis belum diaktifkan", "Automated sending is not enabled"], ["Siapkan audiens dan tindak lanjut dari data customer yang terhubung.", "Prepare audiences and follow-ups from connected customer data."], ["Catat kunjungan dan pendapatan tanpa kehilangan sumber kebenaran.", "Record visits and revenue without losing the source of truth."], ["Transaksi yang dibuat setelah opportunity dibuka dapat dipakai untuk mencatat customer kembali.", "Transactions created after an opportunity opens can confirm a customer return."], ["Data tetap disimpan di Supabase dan otomatis membuat kunjungan turunan bila diperlukan.", "Data remains in Supabase and can create a related visit when needed."], ["Setiap transaksi terhubung ke customer, cabang, dan layanan yang dibeli.", "Every transaction maps to a customer, branch, and purchased service."], ["Gunakan opportunity sebagai dasar daftar follow-up yang jelas dan dapat diukur.", "Use opportunities as the basis for clear, measurable follow-up lists."], ["Kampanye live V1 menyiapkan audiens yang bisa ditinjau, diekspor, atau ditindaklanjuti lewat WhatsApp.", "Live Campaigns V1 prepares audiences to review, export, or follow up through WhatsApp."], ["Semua action dan hasil customer tetap tercatat di Custara.", "All actions and customer outcomes remain recorded in Custara."], ["Belum ada opportunity aktif.", "No active opportunities yet."], ["Masukkan customer dan transaksi, lalu perbarui data.", "Add customers and transactions, then refresh the data."], ["Atur poin dan benefit agar customer punya alasan untuk kembali.", "Set points and benefits to give customers a reason to return."], ["Gunakan daftar customer dari peluang untuk membuat tugas follow-up yang jelas.", "Use opportunity audiences to create clear follow-up tasks."], ["Atur workspace, cabang, dan akses tim dari sini.", "Manage workspace, branches, and team access here."],
+      ["Login diperlukan", "Sign-in required"], ["Sesi Supabase sudah kedaluwarsa. Silakan masuk kembali agar data dapat dimuat.", "Your Supabase session expired. Sign in again to load data."], ["Memuat data...", "Loading data..."], ["Mengambil data...", "Loading data..."], ["Login belum terhubung", "Sign-in not connected"], ["Data workspace belum dapat dimuat.", "Workspace data could not be loaded."], ["Workspace Custara terhubung ke Supabase", "Custara workspace connected to Supabase"], ["Belum ada aksi", "No action yet"], ["Tidak ada aksi", "No action"], ["Lihat detail", "View details"], ["Tandai dihubungi", "Mark contacted"], ["Customer perlu ditindaklanjuti", "Customer needs follow-up"], ["Potensi", "Potential"], ["nilai estimasi", "estimated value"], ["pelanggan aktif", "active customers"], ["Data tenant saat ini", "Current workspace data"], ["Riwayat yang sudah masuk", "Imported history"], ["Siap ditindaklanjuti", "Ready for follow-up"], ["Total data yang termuat", "Total loaded data"], ["Tenant dan cabang dari sesi login saat ini.", "Workspace and branch from the current sign-in."], ["Semua cabang", "All branches"], ["Pemilik / Admin", "Owner / Admin"], ["API runtime dan tenant context aktif", "Runtime API and workspace context are active"], ["Aktivitas customer tercatat", "Customer activity recorded"], ["Belum ada aktivitas yang tersimpan.", "No saved activity yet."], ["Customer kembali setelah ditindaklanjuti", "Customer returned after follow-up"], ["Aktivitas customer tercatat", "Customer activity recorded"], ["Riwayat customer belum termuat", "Customer history has not loaded"], ["Profil customer", "Customer profile"], ["Langkah berikutnya", "Next steps"], ["Customer belum memberi izin untuk dihubungi lewat WhatsApp.", "Customer has not given permission to be contacted on WhatsApp."], ["Kunjungan 90 hari", "Visits in the last 90 days"], ["Tidak ada customer yang cocok untuk diekspor", "No matching customers to export"], ["berhasil diekspor", "exported successfully"], ["hasil follow-up", "follow-up result"], ["Hasil kembalinya customer berhasil disimpan", "Customer return outcome saved"], ["Opportunity tidak ditemukan", "Opportunity not found"], ["Hasil opportunity gagal disimpan", "Follow-up outcome could not be saved"], ["Opportunity ditutup sebagai belum kembali", "Opportunity closed as did not return"], ["Opportunity gagal ditutup", "Opportunity could not be closed"], ["Status follow-up dan riwayat tindakan tersimpan", "Follow-up status and action history saved"], ["Aksi gagal disimpan", "Action could not be saved"], ["Link WhatsApp dibuka dari workspace Custara", "WhatsApp link opened from the Custara workspace"], ["Link WhatsApp dibuka dan riwayat tersimpan", "WhatsApp link opened and history saved"], ["Riwayat WhatsApp belum tersimpan", "WhatsApp history was not saved"], ["Customer ditandai sudah dihubungi dari workspace Custara", "Customer marked as contacted from the Custara workspace"], ["Catat transaksi setelah opportunity dibuka terlebih dahulu.", "Record a transaction after the opportunity is opened first."], ["Customer, cabang, dan nilai transaksi wajib tersedia", "Customer, branch, and transaction value are required"], ["Menyimpan customer...", "Saving customer..."], ["Menyimpan transaksi...", "Saving transaction..."], ["Menyimpan hasil opportunity...", "Saving follow-up outcome..."], ["Menyimpan hasil follow-up...", "Saving follow-up result..."] ,
+      ["Tersimpan", "Saved"], ["Belum dimulai", "Not started"], ["Hasil tercatat", "Outcome recorded"], ["Tidak ada kunjungan", "No visits"], ["Pelanggan aktif", "Active customers"], ["Transaksi tercatat", "Recorded transactions"], ["Peluang terbuka", "Open opportunities"], ["Transaksi", "Transactions"], ["Layanan", "Service"], ["Cabang", "Branch"], ["Sumber", "Source"], ["Izin WhatsApp", "WhatsApp permission"], ["Tindak lanjut", "Follow-up"], ["Aksi tersimpan", "Saved actions"], ["Persetujuan WhatsApp", "WhatsApp permission"], ["Mode pengiriman", "Delivery mode"], ["Manual / tugas", "Manual / task"],
+      ["Impor CSV", "CSV import"], ["Sumber kebenaran", "source of truth"], ["Nilai transaksi", "Transaction value"], ["Total belanja", "Total spend"], ["Saldo poin", "Points balance"], ["Tingkat loyalitas", "Loyalty tier"], ["Kunjungan terakhir", "Last visit"], ["Kunjungan", "Visits"], ["Layanan terakhir", "Recent services"], ["Identitas dan cabang", "Identity and branch"], ["Riwayat kunjungan", "Visit history"],
+      ["Buka WhatsApp", "Open WhatsApp"], ["Tandai sudah dihubungi", "Mark as contacted"], ["Boleh dihubungi", "Allowed to contact"], ["Belum ada kunjungan", "No visit yet"], ["Belum ditautkan", "Not linked"], ["Belum diatur", "Not configured"], ["Belum ditentukan", "Not assigned"], ["Tanpa nama", "Unnamed customer"], ["Nomor belum tersedia", "No phone number"], ["Belum ada peluang", "No active opportunity"],
+      ["Catat hasil opportunity", "Record follow-up outcome"], ["Tutup opportunity", "Close opportunity"], ["Opportunity", "Opportunity"], ["customer", "customer"], ["pelanggan", "customers"], ["Cabang", "Branch"], ["Layanan", "Service"], ["Aktivitas", "Activity"], ["Status", "Status"], ["Nilai", "Value"]
+    ];
+
+    function translateDashboardText(value) {
+      let result = String(value ?? "");
+      dashboardCopy.slice().sort((left, right) => right[0].length - left[0].length).forEach(([source, target]) => { result = result.split(source).join(target); });
+      return result;
+    }
+
+    function localizeDashboardCopy(root = document) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+      textNodes.forEach(node => { if (node.parentElement?.tagName !== "SCRIPT" && node.parentElement?.tagName !== "STYLE") node.nodeValue = translateDashboardText(node.nodeValue); });
+      root.querySelectorAll?.("[placeholder], [aria-label], [title]").forEach(element => ["placeholder", "aria-label", "title"].forEach(attribute => { if (element.hasAttribute(attribute)) element.setAttribute(attribute, translateDashboardText(element.getAttribute(attribute))); }));
+    }
+
+    window.translateCustaraText = translateDashboardText;
+    window.localizeCustaraUi = localizeDashboardCopy;
 
     function sourceLabel(value) { return uiLabels[value] || value; }
 
@@ -509,7 +558,7 @@
 
     function status(text) {
       const lower = text.toLowerCase();
-      const type = lower.includes("refund") || lower.includes("failed") ? "danger" : lower.includes("queued") || lower.includes("ready") || lower.includes("pending") ? "warning" : lower.includes("record") || lower.includes("import") || lower.includes("active") || lower.includes("success") ? "success" : "neutral";
+      const type = lower.includes("refund") || lower.includes("failed") ? "danger" : lower.includes("queued") || lower.includes("ready") || lower.includes("pending") ? "warning" : lower.includes("record") || lower.includes("import") || lower.includes("active") || lower.includes("success") || lower.includes("boleh") ? "success" : "neutral";
       return `<span class="wavr-status ${type}">${uiLabel(text)}</span>`;
     }
 
@@ -644,23 +693,34 @@
       document.getElementById("demoButtonLabel").textContent = appState.demo.active ? "Keluar demo" : "Mulai simulasi";
       document.querySelectorAll("#mainNav button").forEach(button => button.classList.toggle("is-active", button.dataset.page === page));
       hydrateIcons();
+      localizeDashboardCopy(pageRoot);
+      document.getElementById("breadcrumbCurrent").textContent = uiLabel(page.charAt(0).toUpperCase() + page.slice(1));
+      document.getElementById("demoButtonLabel").textContent = appState.demo.active ? "Exit walkthrough" : "Start walkthrough";
     }
 
     function openModal(title, subtitle, body, foot) {
-      document.getElementById("modalTitle").textContent = title;
+      const friendlyModalTitles = { "Catat hasil opportunity": "Catat hasil tindak lanjut", "Tutup opportunity": "Tutup peluang" };
+      document.getElementById("modalTitle").textContent = friendlyModalTitles[title] || title;
       document.getElementById("modalSubtitle").textContent = subtitle || "";
       document.getElementById("modalBody").innerHTML = body;
       document.getElementById("modalFoot").innerHTML = foot || `<button type="button" class="wavr-button" data-action="close-modal">Close</button>`;
       document.getElementById("modalBackdrop").hidden = false;
       hydrateIcons();
+      localizeDashboardCopy(document.getElementById("modalBackdrop"));
       document.querySelector("#modalBody input, #modalBody select")?.focus();
     }
 
     function closeModal() { document.getElementById("modalBackdrop").hidden = true; }
 
-    function showToast(message) {
+    function showToast(message, loading = false) {
       const toast = document.getElementById("toast");
-      document.getElementById("toastText").textContent = message;
+      document.getElementById("toastText").textContent = translateDashboardText(message);
+      toast.classList.toggle("is-loading", loading);
+      const toastIcon = toast.querySelector("[data-icon-name]");
+      if (toastIcon) {
+        toastIcon.dataset.iconName = loading ? "clock" : "check-circle";
+        hydrateIcons();
+      }
       toast.classList.add("is-visible");
       clearTimeout(appState.toastTimer);
       appState.toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2800);
@@ -747,10 +807,11 @@
     }
 
     document.addEventListener("click", event => {
+      if (event.target.closest("#pageRoot input, #pageRoot select, #pageRoot textarea")) return;
       const navButton = event.target.closest("#mainNav button[data-page]");
-      if (navButton) { renderPage(navButton.dataset.page); return; }
+      if (navButton) { if (window.CustaraLive?.navigate) window.CustaraLive.navigate(navButton.dataset.page); else renderPage(navButton.dataset.page); return; }
       const pageLink = event.target.closest("[data-page-link]");
-      if (pageLink) { renderPage(pageLink.dataset.pageLink); return; }
+      if (pageLink) { if (window.CustaraLive?.navigate) window.CustaraLive.navigate(pageLink.dataset.pageLink); else renderPage(pageLink.dataset.pageLink); return; }
       const actionTarget = event.target.closest("[data-action]");
       if (actionTarget) { handleAction(actionTarget); return; }
       if (event.target.id === "modalBackdrop") closeModal();
@@ -910,7 +971,7 @@
     }
 
     function renderCustomers() {
-      const actions = `<button type="button" class="wavr-button" data-action="scan"><span data-icon-name="scan"></span>Pindai ID pengenal</button><button type="button" class="wavr-button primary" data-action="add-customer"><span data-icon-name="plus"></span>Tambah pelanggan</button>`;
+      const actions = `<button type="button" class="wavr-button" data-action="import-csv"><span data-icon-name="upload"></span>Impor CSV</button><button type="button" class="wavr-button" data-action="scan"><span data-icon-name="scan"></span>Pindai ID pengenal</button><button type="button" class="wavr-button primary" data-action="add-customer"><span data-icon-name="plus"></span>Tambah pelanggan</button>`;
       const rows = appState.customers.map(customer => `<tr><td><div class="wavr-table-person">${avatar(customer)}<div><strong>${customer.name}</strong><span>${customer.phone}</span></div></div></td><td><span class="wavr-chip neutral">${customer.identifier}</span></td><td class="wavr-text-soft">${customer.lastVisit}</td><td class="wavr-text-soft">${customer.visits}</td><td><strong>${formatIDR(customer.spend)}</strong></td><td>${status(customer.tier)}</td><td><button type="button" class="wavr-button small" data-action="view-customer" data-customer="${customer.id}">Lihat profil ${icon("arrow", 12)}</button></td></tr>`).join("");
       const body = `<section class="wavr-panel"><div class="wavr-search-bar"><div class="wavr-search-input">${icon("search", 16)}<input class="wavr-input" id="customerSearch" type="search" placeholder="Cari nama, nomor telepon, atau ID pengenal" autocomplete="off" /></div><select class="wavr-select" id="customerSegmentFilter" aria-label="Filter segmen"><option value="all">Semua segmen</option><option value="High value">Nilai tinggi</option><option value="Inactive >60d">Tidak aktif &gt;60 hari</option><option value="Near tier">Hampir naik tingkat</option><option value="Frequent visitor">Sering berkunjung</option></select></div><div class="wavr-panel-head"><div><h2>Semua pelanggan <span class="wavr-text-muted">· ${appState.customers.length} profil</span></h2><p>Pelanggan dibatasi ke cabang Senopati dan memperhatikan persetujuan.</p></div><span class="wavr-status success">Identifikasi 68.4%</span></div><div class="wavr-table-wrap"><table class="wavr-data-table"><thead><tr><th>Pelanggan</th><th>ID pengenal</th><th>Kunjungan terakhir</th><th>Kunjungan</th><th>Total belanja</th><th>Tingkat</th><th></th></tr></thead><tbody id="customerTableBody">${rows}</tbody></table></div></section>`;
       return renderShellPage("Pelanggan", "Cari, identifikasi, dan pahami seluruh interaksi pelanggan.", actions, body);
@@ -1236,6 +1297,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="custara-runtime-config.js?v=20260810-01"></script>
-  <script src="custara-live.js?v=20260810-01"></script>
+  <script src="custara-live.js?v=20260811-12"></script>
 </body>
 </html>

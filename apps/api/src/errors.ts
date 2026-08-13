@@ -85,6 +85,16 @@ export function toProblem(error: unknown, requestId: string) {
       request_id: requestId,
     };
   }
+  if (prismaCode === "P2028") {
+    return {
+      type: "https://api.custara.online/problems/transaction-timeout",
+      title: "Proses impor terlalu lama",
+      status: 408,
+      code: "IMPORT_TRANSACTION_TIMEOUT",
+      detail: "Import membutuhkan waktu lebih lama dari batas yang tersedia. Gunakan file yang lebih kecil atau bagi file menjadi beberapa bagian.",
+      request_id: requestId,
+    };
+  }
 
   return {
     type: "https://api.custara.online/problems/internal-error",
