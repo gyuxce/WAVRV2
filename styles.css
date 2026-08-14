@@ -803,6 +803,8 @@ p:last-child { margin-bottom: 0; }
     grid-template-columns: 1fr;
   }
   .pipeline { grid-template-columns: repeat(2, 1fr); }
+  .flow-diagram { grid-template-columns: 1fr; }
+  .flow-arrow { display: none; }
   .story-copy { border-right: 0; border-bottom: 1px solid var(--line); }
   .hero { padding: 56px 0 64px; }
   .section { padding: 72px 0; }
