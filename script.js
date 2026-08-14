@@ -1,5 +1,5 @@
 const CUSTARA_WHATSAPP_NUMBER = (document.body.dataset.whatsapp || "6288980414923").replace(/\D/g, "");
-const CUSTARA_EMAIL = document.body.dataset.email || "partnership@ilusa.com";
+const CUSTARA_EMAIL = document.body.dataset.email || "partnership@ilusa.id";
 const CUSTARA_WHATSAPP_TEXT = "Halo Custara, saya mau cerita dulu soal bisnis saya. Ingin lihat 1 peluang yang masuk akal.";
 
 const demoSteps = [
