@@ -1,21 +1,21 @@
-/* Custara product demo — same quiet Notion-like system as the landing page. */
+/* Custara product demo — same serious system as the landing page. */
 :root {
-  --wavr-ink: #37352f;
-  --wavr-ink-soft: #6f6e69;
-  --wavr-muted: #9b9a97;
-  --wavr-line: #e9e9e7;
+  --wavr-ink: #1c1b17;
+  --wavr-ink-soft: #4a4943;
+  --wavr-muted: #7a786f;
+  --wavr-line: #e5e3de;
   --wavr-surface: #ffffff;
-  --wavr-canvas: #f7f6f3;
-  --wavr-sidebar: #f7f6f3;
-  --wavr-sidebar-soft: #efeee9;
-  --wavr-teal: #0f766e;
-  --wavr-blue: #0f766e;
-  --wavr-purple: #0f766e;
-  --wavr-green: #0f766e;
-  --wavr-orange: #9a6700;
-  --wavr-red: #c4554d;
-  --wavr-yellow: #9a6700;
-  --wavr-shadow: 0 1px 2px rgba(55, 53, 47, .05), 0 8px 24px rgba(55, 53, 47, .05);
+  --wavr-canvas: #fafaf8;
+  --wavr-sidebar: #f3f2ef;
+  --wavr-sidebar-soft: #e9e7e2;
+  --wavr-teal: #0f5f56;
+  --wavr-blue: #0f5f56;
+  --wavr-purple: #0f5f56;
+  --wavr-green: #0f5f56;
+  --wavr-orange: #b7791f;
+  --wavr-red: #b34038;
+  --wavr-yellow: #b7791f;
+  --wavr-shadow: 0 1px 2px rgba(28, 27, 23, .05), 0 8px 24px rgba(28, 27, 23, .05);
   --wavr-radius-lg: 12px;
   --wavr-radius-md: 8px;
   --wavr-radius-sm: 6px;
@@ -31,7 +31,7 @@ body {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(15, 118, 110, .22);
+  outline: 2px solid rgba(15, 95, 86, .22);
   outline-offset: 1px;
 }
 
@@ -69,18 +69,18 @@ select:focus-visible {
 }
 .wavr-nav button:hover {
   color: var(--wavr-ink);
-  background: #efeee9;
+  background: #e9e7e2;
 }
 .wavr-nav button.is-active {
   color: var(--wavr-ink);
-  background: #efeee9;
+  background: #e9e7e2;
   box-shadow: none;
 }
 .wavr-nav button > .wavr-nav-icon { flex: 0 0 16px; color: var(--wavr-muted); }
 .wavr-nav button.is-active > .wavr-nav-icon { color: var(--wavr-ink); }
 .wavr-nav-count {
   color: var(--wavr-red);
-  background: rgba(196, 85, 77, .1);
+  background: rgba(179, 64, 56, .1);
 }
 .wavr-branch-card {
   border: 1px solid var(--wavr-line);
@@ -96,7 +96,7 @@ select:focus-visible {
 .wavr-user { border-top-color: var(--wavr-line); }
 .wavr-avatar {
   color: var(--wavr-teal);
-  background: #e7f3f1;
+  background: #e6f0ee;
 }
 .wavr-sidebar-bottom { margin-top: auto; }
 
@@ -135,7 +135,7 @@ select:focus-visible {
 }
 .wavr-button:hover {
   transform: none;
-  border-color: #d3d1cb;
+  border-color: #d6d3cc;
   background: #fff;
   box-shadow: none;
 }
@@ -146,12 +146,12 @@ select:focus-visible {
   box-shadow: none;
 }
 .wavr-button.primary:hover {
-  background: #2f2e29;
-  border-color: #2f2e29;
+  background: #2a2923;
+  border-color: #2a2923;
 }
 .wavr-button.secondary {
   color: var(--wavr-ink-soft);
-  border-color: #d3d1cb;
+  border-color: #d6d3cc;
   background: #fff;
 }
 .wavr-button.dark {
@@ -165,7 +165,7 @@ select:focus-visible {
 .wavr-top-avatar { border-left-color: var(--wavr-line); }
 .wavr-top-avatar .wavr-avatar {
   color: var(--wavr-teal);
-  background: #e7f3f1;
+  background: #e6f0ee;
 }
 
 .wavr-content {
@@ -205,11 +205,11 @@ select:focus-visible {
 .wavr-kpi-icon.teal,
 .wavr-kpi-icon.purple {
   color: var(--wavr-teal);
-  background: #e7f3f1;
+  background: #e6f0ee;
 }
 .wavr-kpi-icon.orange {
-  color: #9a6700;
-  background: #f8f1df;
+  color: #b7791f;
+  background: #f7efe0;
 }
 .wavr-kpi-foot strong { color: var(--wavr-teal); }
 .wavr-panel-head h2,
@@ -219,16 +219,16 @@ select:focus-visible {
 }
 .wavr-panel-head p { color: var(--wavr-muted); }
 .wavr-status.success {
-  color: #0f766e;
-  background: #e7f3f1;
+  color: #0f5f56;
+  background: #e6f0ee;
 }
 .wavr-status.warning {
-  color: #9a6700;
-  background: #f8f1df;
+  color: #b7791f;
+  background: #f7efe0;
 }
 .wavr-status.danger {
-  color: #c4554d;
-  background: #f8e8e6;
+  color: #b34038;
+  background: #f6e8e6;
 }
 .wavr-chip {
   border-radius: 6px;
@@ -236,20 +236,20 @@ select:focus-visible {
   background: var(--wavr-canvas);
   border: 1px solid var(--wavr-line);
 }
-.wavr-link-button { color: var(--wavr-teal); font-weight: 500; }
+.wavr-link-button { color: var(--wavr-teal); font-weight: 550; }
 .wavr-activity-table th,
 .wavr-data-table th {
   text-transform: none;
   letter-spacing: 0;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 550;
   color: var(--wavr-muted);
 }
 .wavr-table td { border-top-color: var(--wavr-line); }
 .wavr-table tr:hover td { background: #fbfbfa; }
 
 .wavr-modal-backdrop {
-  background: rgba(55, 53, 47, .28);
+  background: rgba(28, 27, 23, .28);
   backdrop-filter: blur(2px);
 }
 .wavr-modal { box-shadow: var(--wavr-shadow); }
@@ -313,7 +313,7 @@ select:focus-visible {
 .wavr-demo-step-line {
   height: 2px;
   margin-bottom: 8px;
-  background: #ebeae6;
+  background: #e5e3de;
 }
 .wavr-demo-step.is-done .wavr-demo-step-line { background: var(--wavr-teal); }
 .wavr-demo-step.is-current .wavr-demo-step-line { background: var(--wavr-ink); }
@@ -361,7 +361,7 @@ select:focus-visible {
   transition: border-color .15s ease, background .15s ease;
 }
 .wavr-segment-card:hover {
-  border-color: #d3d1cb;
+  border-color: #d6d3cc;
   background: #fbfbfa;
   box-shadow: none;
   transform: none;
@@ -443,7 +443,7 @@ select:focus-visible {
   height: 42px;
   border: 1px solid var(--wavr-line);
   border-radius: 8px;
-  background: #e7f3f1;
+  background: #e6f0ee;
 }
 .wavr-data-table tr.is-highlight td { background: #f3faf8; }
 
