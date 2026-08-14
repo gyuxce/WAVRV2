@@ -30,25 +30,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --wavr-ink: #101a2f;
-      --wavr-ink-soft: #51617d;
-      --wavr-muted: #8c9ab2;
-      --wavr-line: #e4e9f2;
+      --wavr-ink: #151c1a;
+      --wavr-ink-soft: #5b6863;
+      --wavr-muted: #7b8783;
+      --wavr-line: #e2e7e4;
       --wavr-surface: #ffffff;
-      --wavr-canvas: #f5f7fb;
-      --wavr-sidebar: #0e172b;
-      --wavr-sidebar-soft: #18243e;
-      --wavr-teal: #18b6aa;
-      --wavr-blue: #3d7cf6;
-      --wavr-purple: #8863e9;
-      --wavr-green: #21bd6a;
-      --wavr-orange: #f69b22;
-      --wavr-red: #ef4965;
-      --wavr-yellow: #f1c84b;
-      --wavr-shadow: 0 14px 34px rgba(28, 46, 85, 0.08);
-      --wavr-radius-lg: 18px;
-      --wavr-radius-md: 12px;
-      --wavr-radius-sm: 8px;
+      --wavr-canvas: #f6f7f5;
+      --wavr-sidebar: #16332f;
+      --wavr-sidebar-soft: #1e403b;
+      --wavr-teal: #0d948a;
+      --wavr-blue: #0d948a;
+      --wavr-purple: #0b7a72;
+      --wavr-green: #0d948a;
+      --wavr-orange: #e8943a;
+      --wavr-red: #c35d70;
+      --wavr-yellow: #d5a33d;
+      --wavr-shadow: 0 14px 34px rgba(21, 28, 26, 0.07);
+      --wavr-radius-lg: 20px;
+      --wavr-radius-md: 14px;
+      --wavr-radius-sm: 10px;
       --wavr-font: "Plus Jakarta Sans", Arial, sans-serif;
     }
 
@@ -66,7 +66,7 @@
     button, input, select { font: inherit; }
     button { cursor: pointer; }
     button:focus-visible, input:focus-visible, select:focus-visible {
-      outline: 3px solid rgba(61, 124, 246, 0.25);
+      outline: 3px solid rgba(13, 148, 138, 0.28);
       outline-offset: 2px;
     }
 
@@ -94,9 +94,9 @@
     }
     .wavr-brand-text { display: flex; flex-direction: column; gap: 3px; }
     .wavr-brand-text strong { font-size: 16px; letter-spacing: -0.02em; }
-    .wavr-brand-text span { color: #8392af; font-size: 11px; }
+    .wavr-brand-text span { color: #9bb8b2; font-size: 11px; }
 
-    .wavr-nav-label { color: #71809b; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0 12px 10px; }
+    .wavr-nav-label { color: #9bb8b2; font-size: 12px; font-weight: 650; letter-spacing: 0; text-transform: none; padding: 0 12px 10px; }
     .wavr-nav { display: grid; gap: 4px; }
     .wavr-nav button {
       border: 0; background: transparent; color: #9daac1; border-radius: 10px; padding: 11px 12px;
@@ -109,15 +109,15 @@
     .wavr-nav-count { background: rgba(239, 73, 101, 0.18); color: #ff8396; padding: 3px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; }
 
     .wavr-sidebar-bottom { margin-top: auto; display: grid; gap: 14px; }
-    .wavr-branch-card { background: #16213a; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px; }
-    .wavr-branch-card small { color: #8492aa; display: block; font-size: 10px; margin-bottom: 8px; }
+    .wavr-branch-card { background: #1e403b; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 13px; }
+    .wavr-branch-card small { color: #9bb8b2; display: block; font-size: 10px; margin-bottom: 8px; }
     .wavr-branch-card strong { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-    .wavr-branch-card strong::before { content: ""; width: 7px; height: 7px; background: var(--wavr-green); border-radius: 50%; box-shadow: 0 0 0 3px rgba(33,189,106,0.14); }
+    .wavr-branch-card strong::before { content: ""; width: 7px; height: 7px; background: var(--wavr-teal); border-radius: 50%; box-shadow: 0 0 0 3px rgba(13,148,138,0.18); }
     .wavr-user { border-top: 1px solid rgba(255,255,255,0.08); padding: 14px 8px 0; display: flex; align-items: center; gap: 10px; }
-    .wavr-avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #f0eaff; color: #7652d8; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .wavr-avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #c5e6df; color: #1d5e59; font-size: 12px; font-weight: 700; flex-shrink: 0; }
     .wavr-user div { min-width: 0; }
     .wavr-user strong { font-size: 12px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .wavr-user span { color: #8492aa; font-size: 10px; }
+    .wavr-user span { color: #9bb8b2; font-size: 10px; }
 
     .wavr-main { flex: 1; min-width: 0; }
     .wavr-topbar { height: 76px; background: var(--wavr-surface); border-bottom: 1px solid var(--wavr-line); display: flex; align-items: center; justify-content: space-between; padding: 0 34px; gap: 18px; }
@@ -141,9 +141,9 @@
     .wavr-page-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 
     .wavr-button { border: 1px solid var(--wavr-line); background: var(--wavr-surface); color: var(--wavr-ink-soft); border-radius: 9px; padding: 10px 13px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; font-size: 12px; transition: 0.18s ease; white-space: nowrap; }
-    .wavr-button:hover { border-color: #cbd5e7; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(28,46,85,0.06); }
-    .wavr-button.primary { background: var(--wavr-teal); border-color: var(--wavr-teal); color: white; box-shadow: 0 7px 16px rgba(24,182,170,0.2); }
-    .wavr-button.primary:hover { background: #12a499; border-color: #12a499; }
+    .wavr-button:hover { border-color: #c9d4cf; transform: translateY(-1px); box-shadow: 0 5px 12px rgba(21,28,26,0.06); }
+    .wavr-button.primary { background: var(--wavr-teal); border-color: var(--wavr-teal); color: white; box-shadow: 0 7px 16px rgba(13,148,138,0.18); }
+    .wavr-button.primary:hover { background: #0b7a72; border-color: #0b7a72; }
     .wavr-button:disabled, .wavr-button[aria-disabled="true"] { cursor: not-allowed; opacity: .58; transform: none; box-shadow: none; }
     .wavr-button.primary:disabled, .wavr-button.primary[aria-disabled="true"] { background: #8bbab4; border-color: #8bbab4; }
     .wavr-button.dark { background: var(--wavr-ink); color: white; border-color: var(--wavr-ink); }
@@ -152,32 +152,32 @@
     .wavr-button svg { width: 15px; height: 15px; }
 
     .wavr-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 22px; }
-    .wavr-kpi { background: var(--wavr-surface); border: 1px solid var(--wavr-line); border-radius: var(--wavr-radius-md); padding: 18px; box-shadow: 0 4px 14px rgba(28,46,85,0.03); }
+    .wavr-kpi { background: var(--wavr-surface); border: 1px solid var(--wavr-line); border-radius: var(--wavr-radius-md); padding: 18px; box-shadow: 0 4px 14px rgba(21,28,26,0.03); }
     .wavr-kpi-top { display: flex; justify-content: space-between; align-items: center; color: var(--wavr-ink-soft); font-size: 12px; }
     .wavr-kpi-icon { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; }
-    .wavr-kpi-icon.blue { color: var(--wavr-blue); background: #e8f0ff; }
-    .wavr-kpi-icon.teal { color: var(--wavr-teal); background: #e6fbf7; }
-    .wavr-kpi-icon.purple { color: var(--wavr-purple); background: #f0ebff; }
-    .wavr-kpi-icon.orange { color: var(--wavr-orange); background: #fff4df; }
+    .wavr-kpi-icon.blue { color: var(--wavr-teal); background: #e6f6f3; }
+    .wavr-kpi-icon.teal { color: var(--wavr-teal); background: #e6f6f3; }
+    .wavr-kpi-icon.purple { color: #0b7a72; background: #e3f5f0; }
+    .wavr-kpi-icon.orange { color: #b86a19; background: #fff0df; }
     .wavr-kpi-value { font-size: 27px; letter-spacing: -0.04em; font-weight: 800; margin: 18px 0 7px; }
     .wavr-kpi-foot { display: flex; align-items: center; gap: 7px; color: var(--wavr-ink-soft); font-size: 11px; }
-    .wavr-kpi-foot strong { color: var(--wavr-green); }
+    .wavr-kpi-foot strong { color: var(--wavr-teal); }
 
     .wavr-grid-2 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.85fr); gap: 18px; margin-bottom: 22px; }
-    .wavr-panel { background: var(--wavr-surface); border: 1px solid var(--wavr-line); border-radius: var(--wavr-radius-lg); padding: 21px; box-shadow: 0 4px 14px rgba(28,46,85,0.03); min-width: 0; }
+    .wavr-panel { background: var(--wavr-surface); border: 1px solid var(--wavr-line); border-radius: var(--wavr-radius-lg); padding: 21px; box-shadow: 0 4px 14px rgba(21,28,26,0.03); min-width: 0; }
     .wavr-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; margin-bottom: 18px; }
     .wavr-panel-head h2 { margin: 0; font-size: 15px; letter-spacing: -0.02em; }
     .wavr-panel-head p { margin: 5px 0 0; color: var(--wavr-muted); font-size: 11px; }
     .wavr-link-button { border: 0; background: transparent; color: var(--wavr-teal); padding: 0; font-size: 11px; font-weight: 700; white-space: nowrap; }
-    .wavr-link-button:hover { color: #0e8f85; text-decoration: underline; }
+    .wavr-link-button:hover { color: #0b7a72; text-decoration: underline; }
 
     .wavr-opportunity-list { display: grid; gap: 10px; }
     .wavr-opportunity { border: 1px solid var(--wavr-line); border-radius: 12px; padding: 14px; display: flex; align-items: center; gap: 13px; }
-    .wavr-opportunity:hover { border-color: #cbd5e7; background: #fbfcff; }
+    .wavr-opportunity:hover { border-color: #84cfc5; background: #fbfcfa; }
     .wavr-opportunity-icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0; }
-    .wavr-opportunity-icon.red { color: var(--wavr-red); background: #ffebef; }
-    .wavr-opportunity-icon.orange { color: #d98400; background: #fff2d8; }
-    .wavr-opportunity-icon.purple { color: var(--wavr-purple); background: #f0ebff; }
+    .wavr-opportunity-icon.red { color: var(--wavr-red); background: #fbe8ec; }
+    .wavr-opportunity-icon.orange { color: #b86a19; background: #fff0df; }
+    .wavr-opportunity-icon.purple { color: #0b7a72; background: #e3f5f0; }
     .wavr-opportunity-main { min-width: 0; flex: 1; }
     .wavr-opportunity-main strong { display: block; font-size: 12px; margin-bottom: 4px; }
     .wavr-opportunity-main span { color: var(--wavr-ink-soft); font-size: 11px; }
@@ -289,7 +289,7 @@
     .wavr-empty strong { color: var(--wavr-ink-soft); display: block; margin-bottom: 4px; }
     .wavr-notice { background: #effaf7; border: 1px solid #c8f1e5; border-radius: 10px; padding: 11px 13px; color: #137f73; font-size: 11px; margin-bottom: 16px; display: flex; gap: 8px; align-items: flex-start; }
     .wavr-notice svg { flex-shrink: 0; margin-top: 1px; }
-    .wavr-demo-bar { background: linear-gradient(135deg, #101a2f 0%, #182849 100%); color: #fff; border-radius: 16px; padding: 16px 18px; margin-bottom: 22px; display: grid; grid-template-columns: minmax(190px, .7fr) minmax(300px, 1.3fr) auto; gap: 18px; align-items: center; box-shadow: 0 12px 26px rgba(16, 26, 47, .16); }
+    .wavr-demo-bar { background: #16332f; color: #fff; border-radius: 18px; padding: 20px 22px; margin-bottom: 22px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; align-items: start; box-shadow: 0 14px 32px rgba(21,28,26,.14); }
     .wavr-demo-kicker { color: #6fe4bd; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; display: block; margin-bottom: 5px; }
     .wavr-demo-bar h2 { margin: 0; font-size: 15px; letter-spacing: -.02em; }
     .wavr-demo-bar p { color: #aebbd1; margin: 5px 0 0; font-size: 11px; line-height: 1.4; }
@@ -369,7 +369,7 @@
       .wavr-demo-step span { font-size: 8px; }
     }
   </style>
-  <link rel="stylesheet" href="../demo-custara.css?v=20260814-04" />
+  <link rel="stylesheet" href="../demo-custara.css?v=20260814-05" />
   <link rel="stylesheet" href="custara-live.css?v=20260811-02" />
 </head>
 <body>
@@ -570,6 +570,14 @@
         el.innerHTML = icon(name, 17);
       });
       document.querySelectorAll("[data-icon-name]").forEach(el => { el.innerHTML = icon(el.dataset.iconName, 17); });
+    }
+
+    function transactionRow(tx) {
+      const customer = customerById(tx.customerId);
+      if (!customer) {
+        return `<tr><td colspan="5" class="wavr-text-muted">Customer tidak ditemukan</td></tr>`;
+      }
+      return `<tr><td><div class="wavr-table-person">${avatar(customer)}<div><strong>${customer.name}</strong><span>${tx.date}</span></div></div></td><td><strong>${uiLabel(tx.service)}</strong><span class="wavr-text-muted" style="display:block;margin-top:3px;font-size:12px">${tx.id}</span></td><td class="wavr-text-soft">${sourceLabel(tx.source)}</td><td>${status(tx.status)}</td><td class="wavr-text-right"><strong>${formatIDR(tx.amount)}</strong></td></tr>`;
     }
 
     function renderShellPage(title, description, actions, body) {
@@ -810,10 +818,29 @@
 
     document.addEventListener("click", event => {
       if (event.target.closest("#pageRoot input, #pageRoot select, #pageRoot textarea")) return;
-      const navButton = event.target.closest("#mainNav button[data-page]");
-      if (navButton) { if (window.CustaraLive?.navigate) window.CustaraLive.navigate(navButton.dataset.page); else renderPage(navButton.dataset.page); return; }
+      if (navButton) {
+        const page = navButton.dataset.page;
+        try {
+          if (window.CustaraLive?.navigate) window.CustaraLive.navigate(page);
+          else renderPage(page);
+        } catch (error) {
+          console.error(error);
+          renderPage(page);
+        }
+        return;
+      }
       const pageLink = event.target.closest("[data-page-link]");
-      if (pageLink) { if (window.CustaraLive?.navigate) window.CustaraLive.navigate(pageLink.dataset.pageLink); else renderPage(pageLink.dataset.pageLink); return; }
+      if (pageLink) {
+        const page = pageLink.dataset.pageLink;
+        try {
+          if (window.CustaraLive?.navigate) window.CustaraLive.navigate(page);
+          else renderPage(page);
+        } catch (error) {
+          console.error(error);
+          renderPage(page);
+        }
+        return;
+      }
       const actionTarget = event.target.closest("[data-action]");
       if (actionTarget) { handleAction(actionTarget); return; }
       if (event.target.id === "modalBackdrop") closeModal();
