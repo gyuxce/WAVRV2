@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Custara bantu bisnis layanan lihat siapa yang jarang datang, siapa yang paling berharga, dan apa yang perlu dilakukan dari data yang sudah ada." />
-    <meta name="theme-color" content="#0d948a" />
+    <meta name="description" content="Custara bantu bisnis layanan baca data customer yang sudah ada, lalu tahu siapa yang perlu dihubungi." />
+    <meta name="theme-color" content="#ffffff" />
     <title>Custara — Jaga customer yang sudah datang</title>
     <link rel="canonical" href="https://www.custara.online/" />
     <meta property="og:locale" content="id_ID" />
@@ -14,15 +14,13 @@
     <meta property="og:title" content="Custara — Jaga customer yang sudah datang" />
     <meta property="og:description" content="Baca data customer yang sudah ada, lalu tahu siapa yang perlu dihubungi hari ini." />
     <meta property="og:image" content="https://www.custara.online/assets/custara-og.png" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="assets/custara-mark.svg" />
     <link rel="apple-touch-icon" href="assets/custara-mark.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css?v=20260814-03" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css?v=20260814-notion-01" />
   </head>
   <body data-whatsapp="6288980414923" data-email="partnership@ilusa.id">
     <svg class="icon-sprite" aria-hidden="true">
@@ -31,88 +29,87 @@
       <symbol id="menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" /></symbol>
       <symbol id="close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
       <symbol id="check" viewBox="0 0 24 24"><path d="m5 12 4.2 4.2L19 6.5" /></symbol>
+      <symbol id="send" viewBox="0 0 24 24"><path d="m21 3-8.6 18-2.1-7.3L3 11.6 21 3Z" /><path d="m10.3 13.7 4.5-4.5" /></symbol>
     </svg>
 
     <header class="site-header" id="top">
-      <div class="container nav-wrap">
-        <a class="brand" href="index.html" aria-label="Custara beranda"><img class="brand-logo" src="assets/custara-logo.svg" alt="Custara" /></a>
+      <div class="container-wide nav-wrap">
+        <a class="brand" href="index.html" aria-label="Custara beranda">
+          <img class="brand-logo" src="assets/custara-logo.svg" alt="Custara" />
+        </a>
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="site-nav">
-          <svg class="menu-icon"><use href="#menu" /></svg><svg class="close-icon"><use href="#close" /></svg>
+          <svg class="menu-icon"><use href="#menu" /></svg>
+          <svg class="close-icon"><use href="#close" /></svg>
         </button>
         <nav class="site-nav" id="site-nav" aria-label="Navigasi utama">
-          <a href="index.html" aria-current="page">Beranda</a>
-          <a href="produk.html">Produk</a>
-          <a href="solusi.html">Solusi</a>
+          <a href="#produk">Produk</a>
+          <a href="#alur">Cara kerja</a>
+          <a href="#untuk-siapa">Untuk siapa</a>
           <a href="mockup/custara-mockup.html">Demo</a>
-          <a href="kontak.html">Kontak</a>
-          <a class="nav-wa js-whatsapp" href="https://wa.me/6288980414923">Chat WhatsApp <svg><use href="#whatsapp" /></svg></a>
+          <a href="#kontak">Kontak</a>
+          <a class="nav-cta js-whatsapp" href="https://wa.me/6288980414923">Chat WhatsApp</a>
         </nav>
       </div>
     </header>
 
     <main>
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="container hero-layout">
-          <div class="hero-copy reveal">
-            <p class="eyebrow">Klinik, salon, spa, dan bisnis layanan</p>
-            <h1 id="hero-title">Customer lama lebih mudah dijaga daripada terus cari yang baru.</h1>
-            <p class="hero-lede">Custara bantu kamu baca data yang sudah ada: siapa yang jarang datang, siapa yang paling berharga, dan apa yang perlu dilakukan minggu ini.</p>
-            <div class="hero-actions">
+      <section class="hero">
+        <div class="container-wide hero-layout">
+          <div class="reveal">
+            <p class="eyebrow">Custara</p>
+            <h1>Jaga customer yang sudah datang, tanpa tebak-tebakan.</h1>
+            <p class="lede">Baca data yang sudah ada. Tahu siapa yang jarang datang, siapa yang berharga, dan siapa yang perlu dihubungi minggu ini.</p>
+            <div class="actions">
               <a class="button button-primary js-whatsapp" href="https://wa.me/6288980414923">Chat WhatsApp <svg><use href="#whatsapp" /></svg></a>
-              <a class="button button-quiet" href="produk.html">Lihat produk <svg><use href="#arrow-right" /></svg></a>
+              <a class="button button-quiet" href="mockup/custara-mockup.html">Buka demo <svg><use href="#arrow-right" /></svg></a>
             </div>
-            <p class="hero-promise">Kamu cerita kondisi bisnismu. Kita bantu lihat 1 peluang yang masuk akal. Bukan presentasi panjang.</p>
-            <div class="hero-proof">
-              <span class="pilot-pill">Pilot</span>
-              <p><strong>Lagi buka 3–5 bisnis untuk pilot.</strong><br />Beauty, wellness, dan layanan kunjungan berulang.</p>
+            <p class="hero-note">Cerita kondisi bisnismu. Kita bantu lihat 1 peluang yang masuk akal.</p>
+            <div class="hero-meta">
+              <span><strong>Pilot</strong> · 3–5 bisnis</span>
+              <span>Klinik, salon, spa, fitness</span>
+              <span>Tidak perlu ganti POS</span>
             </div>
           </div>
 
-          <div class="hero-product reveal delay-1" aria-label="Pratinjau produk Custara">
-            <div class="ambient-dot dot-one"></div><div class="ambient-dot dot-two"></div>
-            <div class="product-window">
-              <div class="window-topbar"><div class="window-brand"><i></i> Custara</div><div class="window-actions"><span></span><span></span><span></span></div></div>
-              <div class="window-body">
-                <aside class="mini-sidebar"><span class="active"></span><span></span><span></span><span></span><span></span></aside>
-                <div class="app-content">
-                  <div class="app-heading"><div><small>Hari ini</small><strong>Selamat pagi, Andra</strong></div><span class="app-chip">Senopati</span></div>
-                  <div class="opportunity-card hero-opportunity">
-                    <div class="opportunity-top"><span class="signal signal-red"></span><small>Perlu dihubungi</small><b>Contoh data</b></div>
-                    <h2>Tidak datang &gt;60 hari</h2>
-                    <div class="opportunity-stats"><div><strong>86</strong><span>customer</span></div><div><strong>Rp42,8 jt</strong><span>pernah belanja</span></div></div>
-                    <a class="mini-button" href="produk.html">Lihat cara kerjanya <svg><use href="#arrow-right" /></svg></a>
-                  </div>
-                  <div class="app-footer-row"><div class="tiny-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>Mulai dari orang yang paling mungkin kembali.</span></div>
-                </div>
-              </div>
+          <aside class="panel reveal delay-1" aria-label="Contoh peluang">
+            <div class="panel-bar">
+              <strong>Hari ini</strong>
+              <span>Senopati</span>
             </div>
-          </div>
+            <div class="panel-body">
+              <p class="panel-kicker">Perlu dihubungi</p>
+              <h3>Tidak datang &gt;60 hari</h3>
+              <div class="stat-row">
+                <div class="stat"><strong>86</strong><span>customer</span></div>
+                <div class="stat"><strong>Rp42,8 jt</strong><span>pernah belanja</span></div>
+              </div>
+              <a class="text-link" href="#alur">Lihat cara kerjanya <svg><use href="#arrow-right" /></svg></a>
+            </div>
+          </aside>
         </div>
       </section>
 
-      <section class="problem section-pad" id="problem">
+      <section class="section" id="masalah">
         <div class="container">
-          <div class="section-intro split-intro reveal">
-            <div>
-              <p class="eyebrow">Yang sering terjadi</p>
-              <h2>Datanya sudah ada.<br />Yang kurang, kejelasan.</h2>
-            </div>
+          <div class="section-head reveal">
+            <p class="eyebrow">Yang sering terjadi</p>
+            <h2>Datanya sudah ada. Yang kurang, kejelasan.</h2>
             <p>POS, WhatsApp, membership sudah jalan. Tapi kalau ditanya siapa yang harus dihubungi minggu ini, jawabannya masih tebak-tebakan.</p>
           </div>
-          <div class="problem-grid">
-            <article class="question-card reveal">
+          <div class="simple-list reveal">
+            <article class="simple-item">
               <h3>Siapa yang tidak kembali?</h3>
               <p>Customer bisa pelan-pelan hilang, dan dashboard operasional tidak selalu menunjukkannya.</p>
             </article>
-            <article class="question-card reveal delay-1">
+            <article class="simple-item">
               <h3>Siapa yang paling berharga?</h3>
               <p>Belanja besar belum tentu loyal. Ada yang datang sering, ada yang cuma sekali mahal.</p>
             </article>
-            <article class="question-card reveal delay-2">
+            <article class="simple-item">
               <h3>Siapa yang siap datang lagi?</h3>
               <p>Pola kunjungan sebenarnya bisa dibaca. Tidak perlu ditebak setiap minggu.</p>
             </article>
-            <article class="question-card reveal delay-3">
+            <article class="simple-item">
               <h3>Kampanye mana yang bekerja?</h3>
               <p>Pesan terkirim itu aktivitas. Customer yang kembali, itu hasilnya.</p>
             </article>
@@ -120,45 +117,174 @@
         </div>
       </section>
 
-      <section class="section-pad" id="overview">
+      <section class="section section-soft" id="produk">
         <div class="container">
-          <div class="section-intro split-intro reveal">
-            <div>
-              <p class="eyebrow">Isi situsnya</p>
-              <h2>Bukan satu halaman panjang. Ada ruang untuk lihat pelan-pelan.</h2>
+          <div class="split">
+            <div class="reveal">
+              <p class="eyebrow">Produk</p>
+              <h2>Bukan dashboard untuk dipajang. Ini buat tahu harus ngapain hari ini.</h2>
+              <p>Tidak perlu ganti POS. Custara baca datanya, tim tetap pakai WhatsApp.</p>
+              <ul class="check-list">
+                <li><svg><use href="#check" /></svg>Data customer dan transaksi dalam satu tempat</li>
+                <li><svg><use href="#check" /></svg>Segmen dengan alasan yang jelas, bukan label kosong</li>
+                <li><svg><use href="#check" /></svg>Tindakan yang bisa dilacak sampai hasilnya</li>
+              </ul>
             </div>
-            <p>Mulai dari produknya, cek apakah cocok untuk bisnismu, atau langsung ngobrol.</p>
-          </div>
-          <div class="preview-grid">
-            <article class="preview-tile reveal">
-              <h3>Produk</h3>
-              <p>Lihat apa yang Custara kerjakan dari data yang sudah ada, lewat cerita Nadia.</p>
-              <a class="text-link" href="produk.html">Ke halaman produk <svg><use href="#arrow-right" /></svg></a>
-            </article>
-            <article class="preview-tile reveal delay-1">
-              <h3>Solusi</h3>
-              <p>Untuk klinik, salon, spa, dan fitness. Juga jujur soal yang tidak cocok.</p>
-              <a class="text-link" href="solusi.html">Cek kecocokan <svg><use href="#arrow-right" /></svg></a>
-            </article>
-            <article class="preview-tile reveal delay-2">
-              <h3>Kontak</h3>
-              <p>Chat WhatsApp, email partnership, atau isi form. Pilih yang paling gampang.</p>
-              <a class="text-link" href="kontak.html">Hubungi kami <svg><use href="#arrow-right" /></svg></a>
-            </article>
+            <div class="panel reveal delay-1">
+              <div class="panel-bar">
+                <strong>Nadia Prameswari</strong>
+                <span>Aktif</span>
+              </div>
+              <div class="panel-body">
+                <div class="preview-person">
+                  <span>NP</span>
+                  <div>
+                    <strong>Gold member</strong>
+                    <small>9 kunjungan · Rp12,45 jt</small>
+                  </div>
+                </div>
+                <div class="preview-tags">
+                  <span>Nilai tinggi</span>
+                  <span>Sering datang</span>
+                  <span>Perlu dihubungi</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="cta-band">
-        <div class="container assessment-card reveal">
-          <div class="assessment-copy">
-            <p class="eyebrow light">Mau mulai?</p>
-            <h2>Cerita dulu soal bisnismu.</h2>
-            <p>Kamu cerita kondisinya. Kita bantu lihat 1 peluang yang masuk akal.</p>
+      <section class="section" id="alur">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Cara kerja</p>
+            <h2>Kenalan sama Nadia, tiga langkah.</h2>
+            <p>Datang, kelihatan polanya, lalu dihubungi. Cerita untuk owner, bukan tur teknis.</p>
           </div>
-          <div class="hero-actions">
-            <a class="button button-primary js-whatsapp" href="https://wa.me/6288980414923">Chat WhatsApp <svg><use href="#whatsapp" /></svg></a>
-            <a class="button button-quiet-dark" href="kontak.html">Ke halaman kontak</a>
+          <div class="story-shell reveal">
+            <div class="story-tabs" role="tablist" aria-label="Tahapan cerita Nadia">
+              <button class="story-tab demo-tab is-active" type="button" role="tab" aria-selected="true">1 · Datang</button>
+              <button class="story-tab demo-tab" type="button" role="tab" aria-selected="false">2 · Kelihatan polanya</button>
+              <button class="story-tab demo-tab" type="button" role="tab" aria-selected="false">3 · Dihubungi</button>
+            </div>
+            <div class="story-stage">
+              <div class="story-copy">
+                <span class="story-kicker" id="demoKicker">Datang</span>
+                <h3 id="demoTitle">Nadia datang sebagai customer baru.</h3>
+                <p id="demoText">Profil dibuat sekali. Kunjungan berikutnya ketemu orang yang sama, bukan data yang tercerai.</p>
+                <div class="story-meta">
+                  <span id="demoMetaOne">Member baru</span>
+                  <span id="demoMetaTwo">Belum ada riwayat</span>
+                </div>
+                <button type="button" class="button button-primary demo-next" id="demoNext">Lanjut <svg><use href="#arrow-right" /></svg></button>
+              </div>
+              <div class="story-preview" id="demoPreview" aria-live="polite">
+                <div class="preview-label">Profil customer</div>
+                <div class="preview-person"><span>NP</span><div><strong>Nadia Prameswari</strong><small>Member baru</small></div></div>
+                <div class="preview-line full"></div>
+                <div class="preview-line medium"></div>
+                <div class="preview-line short"></div>
+              </div>
+            </div>
+          </div>
+          <p class="story-more reveal"><a class="text-link" href="mockup/custara-mockup.html">Mau klik-klik dashboardnya? Buka demo produk <svg><use href="#arrow-right" /></svg></a></p>
+        </div>
+      </section>
+
+      <section class="section section-soft" id="untuk-siapa">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Untuk siapa</p>
+            <h2>Untuk bisnis yang hidup dari customer yang kembali.</h2>
+            <p>Mulai dari beauty dan wellness. Cocok untuk yang punya pola kunjungan, paket, atau membership.</p>
+          </div>
+          <div class="simple-list reveal">
+            <article class="simple-item">
+              <h3>Klinik aesthetic</h3>
+              <p>Riwayat treatment, kapan harus datang lagi, dan siapa yang nilainya tinggi.</p>
+            </article>
+            <article class="simple-item">
+              <h3>Salon dan beauty</h3>
+              <p>Frekuensi kunjungan, layanan favorit, dan tawaran yang masuk akal.</p>
+            </article>
+            <article class="simple-item">
+              <h3>Wellness, spa, fitness</h3>
+              <p>Pemakaian paket, membership, kehadiran, dan sinyal churn.</p>
+            </article>
+          </div>
+          <div class="note-box reveal">
+            <p>Tidak perlu ganti POS. Custara baca datanya, tim tetap pakai WhatsApp.</p>
+            <p class="warn">Kalau customermu datang sekali lalu selesai, ini bukan tools-nya.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="kontak">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Kontak</p>
+            <h2>Cerita dulu soal bisnismu.</h2>
+            <p>Chat WhatsApp, email, atau isi form. Pilih yang paling gampang.</p>
+          </div>
+
+          <div class="contact-grid reveal">
+            <a class="contact-card js-whatsapp" href="https://wa.me/6288980414923">
+              <small>WhatsApp</small>
+              <strong>0889-8041-4923</strong>
+              <p>Paling gampang. Langsung chat.</p>
+            </a>
+            <a class="contact-card" href="mailto:partnership@ilusa.id">
+              <small>Email</small>
+              <strong>partnership@ilusa.id</strong>
+              <p>Untuk partnership atau konteks lebih panjang.</p>
+            </a>
+          </div>
+
+          <div class="form-card reveal" id="form">
+            <h3>Atau isi form</h3>
+            <p>Tulis nomor WhatsApp kamu. Email boleh dikosongkan.</p>
+            <form class="assessment-form" id="assessmentForm">
+              <label>Nama lengkap<input required name="name" autocomplete="name" placeholder="Nama kamu" /></label>
+              <label>Nama bisnis<input required name="business" autocomplete="organization" placeholder="Nama bisnis / cabang" /></label>
+              <label>Nomor WhatsApp<input required name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx" /></label>
+              <label>Email <span class="optional">(opsional)</span><input name="email" type="email" autocomplete="email" placeholder="nama@bisnis.com" /></label>
+              <label class="form-wide">Data utamanya sekarang
+                <select name="source">
+                  <option>POS</option>
+                  <option>CRM</option>
+                  <option>Spreadsheet / database</option>
+                  <option>Belum terpusat</option>
+                </select>
+              </label>
+              <div class="form-actions">
+                <a class="button button-primary js-whatsapp" id="formWhatsapp" href="https://wa.me/6288980414923">Chat WhatsApp <svg><use href="#whatsapp" /></svg></a>
+                <button class="button button-quiet" type="submit">Kirim ke email kami</button>
+              </div>
+              <p class="form-message" id="formMessage" role="status"></p>
+            </form>
+          </div>
+
+          <div class="section-head reveal" style="margin-top:48px;margin-bottom:18px">
+            <p class="eyebrow">FAQ</p>
+            <h2>Yang sering ditanya</h2>
+          </div>
+          <div class="faq-list reveal">
+            <details open>
+              <summary>Ini demo, sales call, atau harus siapkan data?</summary>
+              <p>Kamu cerita kondisi bisnismu. Kita bantu lihat 1 peluang yang masuk akal. Bukan presentasi panjang.</p>
+            </details>
+            <details>
+              <summary>Apakah Custara menggantikan POS?</summary>
+              <p>Tidak perlu ganti POS. Custara baca datanya, tim tetap pakai WhatsApp.</p>
+            </details>
+            <details>
+              <summary>Harus pakai RFID?</summary>
+              <p>Tidak wajib. Bisa NFC, QR, nomor HP, atau ID digital, tergantung cara kerja di tempatmu.</p>
+            </details>
+            <details>
+              <summary>Khusus klinik aesthetic saja?</summary>
+              <p>Fokus awalnya beauty, wellness, dan bisnis kunjungan berulang. Kalau customermu datang sekali lalu selesai, ini bukan tools-nya.</p>
+            </details>
           </div>
         </div>
       </section>
@@ -166,19 +292,21 @@
 
     <footer class="site-footer">
       <div class="container footer-wrap">
-        <a class="brand" href="index.html" aria-label="Custara beranda"><img class="brand-logo" src="assets/custara-logo-light.svg" alt="Custara" /></a>
+        <a class="brand" href="index.html" aria-label="Custara beranda">
+          <img class="brand-logo" src="assets/custara-logo.svg" alt="Custara" />
+        </a>
         <p>Bantu bisnis layanan jaga customer yang sudah datang.</p>
         <div class="footer-links">
-          <a href="produk.html">Produk</a>
-          <a href="solusi.html">Solusi</a>
+          <a href="#produk">Produk</a>
+          <a href="#untuk-siapa">Untuk siapa</a>
           <a href="mockup/custara-mockup.html">Demo</a>
-          <a href="kontak.html">Kontak</a>
+          <a href="#kontak">Kontak</a>
         </div>
         <div class="footer-contact">
           <a class="js-whatsapp" href="https://wa.me/6288980414923">0889-8041-4923</a>
           <a href="mailto:partnership@ilusa.id">partnership@ilusa.id</a>
         </div>
-        <small>© <span id="year"></span> Custara. Semua hak dilindungi.</small>
+        <small>© <span id="year"></span> Custara</small>
       </div>
     </footer>
 
