@@ -455,6 +455,7 @@
       const key = name.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
       return `<svg aria-hidden="true" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${iconPaths[key] || iconPaths.grid}</svg>`;
     }
+    window.icon = icon;
 
     const appState = {
       page: "overview",
@@ -486,10 +487,12 @@
       demo: { active: false, stepIndex: 0, progress: [] },
       toastTimer: null
     };
+    window.appState = appState;
 
     function formatIDR(value) {
       return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(value).replace("Rp", "Rp ");
     }
+    window.formatIDR = formatIDR;
 
     const uiLabels = {
       "Overview": "Ikhtisar", "Customers": "Customer", "Transactions": "Transaksi", "Loyalty": "Loyalitas", "Segments": "Peluang", "Campaigns": "Kampanye", "Settings": "Pengaturan",
@@ -499,6 +502,7 @@
     };
 
     function uiLabel(value) { return uiLabels[value] || value; }
+    window.uiLabel = uiLabel;
 
     const dashboardCopy = [
       ["Pindai ID pengenal", "Scan ID"], ["Tambah pelanggan", "Add customer"], ["Cari customer", "Search customers"], ["Daftar customer", "Customer list"], ["Semua pelanggan", "All customers"],
@@ -539,27 +543,32 @@
       textNodes.forEach(node => { if (node.parentElement?.tagName !== "SCRIPT" && node.parentElement?.tagName !== "STYLE") node.nodeValue = translateDashboardText(node.nodeValue); });
       root.querySelectorAll?.("[placeholder], [aria-label], [title]").forEach(element => ["placeholder", "aria-label", "title"].forEach(attribute => { if (element.hasAttribute(attribute)) element.setAttribute(attribute, translateDashboardText(element.getAttribute(attribute))); }));
     }
+    window.localizeDashboardCopy = localizeDashboardCopy;
 
     window.translateCustaraText = translateDashboardText;
     window.localizeCustaraUi = localizeDashboardCopy;
 
     function sourceLabel(value) { return uiLabels[value] || value; }
+    window.sourceLabel = sourceLabel;
 
     function initials(name) {
       return name.split(" ").slice(0, 2).map(word => word[0]).join("").toUpperCase();
     }
 
     function customerById(id) { return appState.customers.find(customer => customer.id === id); }
+    window.customerById = customerById;
 
     function avatar(customer, extra = "") {
       return `<span class="wavr-person-icon ${extra}" aria-label="${customer.name}">${icon("users", 16)}</span>`;
     }
+    window.avatar = avatar;
 
     function status(text) {
       const lower = text.toLowerCase();
       const type = lower.includes("refund") || lower.includes("failed") ? "danger" : lower.includes("queued") || lower.includes("ready") || lower.includes("pending") ? "warning" : lower.includes("record") || lower.includes("import") || lower.includes("active") || lower.includes("success") || lower.includes("boleh") ? "success" : "neutral";
       return `<span class="wavr-status ${type}">${uiLabel(text)}</span>`;
     }
+    window.status = status;
 
     function navIconFor(page) {
       return { overview: "grid", customers: "users", transactions: "receipt", loyalty: "gift", segments: "funnel", campaigns: "megaphone", settings: "settings" }[page] || "grid";
@@ -572,6 +581,7 @@
       });
       document.querySelectorAll("[data-icon-name]").forEach(el => { el.innerHTML = icon(el.dataset.iconName, 17); });
     }
+    window.hydrateIcons = hydrateIcons;
 
     function transactionRow(tx) {
       const customer = customerById(tx.customerId);
@@ -580,10 +590,12 @@
       }
       return `<tr><td><div class="wavr-table-person">${avatar(customer)}<div><strong>${customer.name}</strong><span>${tx.date}</span></div></div></td><td><strong>${uiLabel(tx.service)}</strong><span class="wavr-text-muted" style="display:block;margin-top:3px;font-size:12px">${tx.id}</span></td><td class="wavr-text-soft">${sourceLabel(tx.source)}</td><td>${status(tx.status)}</td><td class="wavr-text-right"><strong>${formatIDR(tx.amount)}</strong></td></tr>`;
     }
+    window.transactionRow = transactionRow;
 
     function renderShellPage(title, description, actions, body) {
       return `<div class="wavr-page-head"><div><h1>${title}</h1><p>${description}</p></div><div class="wavr-page-actions">${actions || ""}</div></div>${body}`;
     }
+    window.renderShellPage = renderShellPage;
 
     const demoSteps = [
       { id: "arrive", label: "Datang", title: "Nadia datang sebagai customer baru.", description: "Profil dibuat sekali. Kunjungan berikutnya ketemu orang yang sama, bukan data yang tercerai." },
@@ -708,6 +720,7 @@
       hydrateIcons();
       localizeDashboardCopy(pageRoot);
     }
+    window.renderPage = renderPage;
 
     function openModal(title, subtitle, body, foot) {
       const friendlyModalTitles = { "Catat hasil opportunity": "Catat hasil tindak lanjut", "Tutup opportunity": "Tutup peluang" };
@@ -720,8 +733,10 @@
       localizeDashboardCopy(document.getElementById("modalBackdrop"));
       document.querySelector("#modalBody input, #modalBody select")?.focus();
     }
+    window.openModal = openModal;
 
     function closeModal() { document.getElementById("modalBackdrop").hidden = true; }
+    window.closeModal = closeModal;
 
     function showToast(message, loading = false) {
       const toast = document.getElementById("toast");
@@ -736,6 +751,7 @@
       clearTimeout(appState.toastTimer);
       appState.toastTimer = setTimeout(() => toast.classList.remove("is-visible"), 2800);
     }
+    window.showToast = showToast;
 
     function openScanModal() {
       openModal("Scan identifier", "RFID, NFC, atau QR akan membuka customer profile yang terhubung.", `<div class="wavr-notice">${icon("scan", 16)}<span>Masukkan identifier demo <strong>NFC-00291</strong> untuk membuka profil Nadia. Coba nilai lain untuk melihat recovery state.</span></div><div class="wavr-form-field"><label for="scanIdentifier">Identifier value</label><input class="wavr-input" id="scanIdentifier" value="NFC-00291" placeholder="Contoh: NFC-00291" /><small>Identifier harus berstatus ACTIVE dan unik di tenant.</small><div class="wavr-inline-error" id="scanError" hidden>${icon("x", 15)}<span></span></div></div>`, `<button type="button" class="wavr-button" data-action="close-modal">Cancel</button><button type="button" class="wavr-button primary" data-action="resolve-identifier"><span data-icon-name="scan"></span>Resolve identifier</button>`);
@@ -819,6 +835,7 @@
 
     document.addEventListener("click", event => {
       if (event.target.closest("#pageRoot input, #pageRoot select, #pageRoot textarea")) return;
+      const navButton = event.target.closest("#mainNav button[data-page]");
       if (navButton) {
         const page = navButton.dataset.page;
         try {
