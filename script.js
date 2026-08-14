@@ -1,9 +1,10 @@
-const CUSTARA_WHATSAPP_NUMBER = (document.body.dataset.whatsapp || "").replace(/\D/g, "");
-const CUSTARA_WHATSAPP_TEXT = "Halo Custara, saya mau cerita dulu soal bisnis saya. Bukan presentasi panjang—ingin lihat 1 peluang yang masuk akal.";
+const CUSTARA_WHATSAPP_NUMBER = (document.body.dataset.whatsapp || "6288980414923").replace(/\D/g, "");
+const CUSTARA_EMAIL = document.body.dataset.email || "partnership@ilusa.com";
+const CUSTARA_WHATSAPP_TEXT = "Halo Custara, saya mau cerita dulu soal bisnis saya. Ingin lihat 1 peluang yang masuk akal.";
 
 const demoSteps = [
   {
-    kicker: "Langkah 01 · Datang",
+    kicker: "Datang",
     title: "Nadia datang sebagai customer baru.",
     text: "Profil dibuat sekali. Kunjungan berikutnya ketemu orang yang sama, bukan data yang tercerai.",
     metaOne: "Member baru",
@@ -11,7 +12,7 @@ const demoSteps = [
     preview: "arrive"
   },
   {
-    kicker: "Langkah 02 · Kelihatan polanya",
+    kicker: "Kelihatan polanya",
     title: "Setelah beberapa kali datang, polanya kelihatan.",
     text: "Sering treatment, belanja cukup besar, lalu jeda 60 hari. Ini yang biasanya hilang di spreadsheet.",
     metaOne: "9 kunjungan",
@@ -19,9 +20,9 @@ const demoSteps = [
     preview: "pattern"
   },
   {
-    kicker: "Langkah 03 · Dihubungi",
+    kicker: "Dihubungi",
     title: "Tim tahu harus chat siapa, dan kenapa.",
-    text: "Bukan blast ke semua. Yang dihitung bukan pesan terkirim—kalau 28 orang kembali, itu yang dihitung.",
+    text: "Bukan blast ke semua. Yang dihitung bukan pesan terkirim. Kalau 28 orang kembali, itu yang dihitung.",
     metaOne: "WhatsApp",
     metaTwo: "Bukan sekadar terkirim",
     preview: "contact"
@@ -59,7 +60,6 @@ function bindWhatsAppLinks() {
   });
 }
 
-let activeDemo = 0;
 const demoKicker = document.getElementById("demoKicker");
 const demoTitle = document.getElementById("demoTitle");
 const demoText = document.getElementById("demoText");
@@ -67,8 +67,11 @@ const demoMetaOne = document.getElementById("demoMetaOne");
 const demoMetaTwo = document.getElementById("demoMetaTwo");
 const demoPreview = document.getElementById("demoPreview");
 const demoTabs = [...document.querySelectorAll(".demo-tab")];
+const demoNext = document.getElementById("demoNext");
+let activeDemo = 0;
 
 function renderDemo(index) {
+  if (!demoTabs.length || !demoKicker) return;
   activeDemo = (index + demoSteps.length) % demoSteps.length;
   const step = demoSteps[activeDemo];
   demoKicker.textContent = step.kicker;
@@ -84,25 +87,29 @@ function renderDemo(index) {
   });
 }
 
-demoTabs.forEach((tab, index) => tab.addEventListener("click", () => renderDemo(index)));
-document.getElementById("demoNext").addEventListener("click", () => renderDemo(activeDemo + 1));
+if (demoTabs.length) {
+  demoTabs.forEach((tab, index) => tab.addEventListener("click", () => renderDemo(index)));
+  demoNext?.addEventListener("click", () => renderDemo(activeDemo + 1));
+}
 
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("site-nav");
-menuToggle.addEventListener("click", () => {
-  const open = siteNav.classList.toggle("open");
-  menuToggle.classList.toggle("is-open", open);
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
-  document.body.classList.toggle("menu-open", open);
-});
-siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
-  siteNav.classList.remove("open");
-  menuToggle.classList.remove("is-open");
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Buka menu");
-  document.body.classList.remove("menu-open");
-}));
+if (menuToggle && siteNav) {
+  menuToggle.addEventListener("click", () => {
+    const open = siteNav.classList.toggle("open");
+    menuToggle.classList.toggle("is-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
+    document.body.classList.toggle("menu-open", open);
+  });
+  siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+    siteNav.classList.remove("open");
+    menuToggle.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Buka menu");
+    document.body.classList.remove("menu-open");
+  }));
+}
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -131,19 +138,31 @@ function formWhatsappMessage() {
   return CUSTARA_WHATSAPP_TEXT;
 }
 
-formWhatsapp.addEventListener("click", (event) => {
+formWhatsapp?.addEventListener("click", (event) => {
   event.preventDefault();
-  const url = whatsappUrl(formWhatsappMessage());
-  window.open(url, "_blank", "noopener,noreferrer");
+  window.open(whatsappUrl(formWhatsappMessage()), "_blank", "noopener,noreferrer");
 });
 
-assessmentForm.addEventListener("submit", (event) => {
+assessmentForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(assessmentForm);
   const name = String(data.get("name") || "").trim() || "kamu";
-  formMessage.textContent = `Makasih, ${name}. Kami akan chat ke nomor WhatsApp yang kamu tulis.`;
-  assessmentForm.reset();
+  const business = String(data.get("business") || "").trim();
+  const whatsapp = String(data.get("whatsapp") || "").trim();
+  const email = String(data.get("email") || "").trim();
+  const source = String(data.get("source") || "").trim();
+  const body = [
+    `Nama: ${name}`,
+    `Bisnis: ${business}`,
+    `WhatsApp: ${whatsapp}`,
+    email ? `Email: ${email}` : "",
+    `Data utama: ${source}`
+  ].filter(Boolean).join("\n");
+  const mailto = `mailto:${CUSTARA_EMAIL}?subject=${encodeURIComponent(`Ngobrol Custara${business ? ` — ${business}` : ""}`)}&body=${encodeURIComponent(body)}`;
+  formMessage.textContent = `Makasih, ${name}. Kalau email tidak terbuka, chat saja ke WhatsApp kami.`;
+  window.location.href = mailto;
 });
 
 bindWhatsAppLinks();
-document.getElementById("year").textContent = new Date().getFullYear();
+const year = document.getElementById("year");
+if (year) year.textContent = new Date().getFullYear();

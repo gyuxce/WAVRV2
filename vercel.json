@@ -16,6 +16,18 @@
       "destination": "/mockup/custara-mockup.html?mode=client"
     },
     {
+      "source": "/produk",
+      "destination": "/produk.html"
+    },
+    {
+      "source": "/solusi",
+      "destination": "/solusi.html"
+    },
+    {
+      "source": "/kontak",
+      "destination": "/kontak.html"
+    },
+    {
       "source": "/demo",
       "destination": "/mockup/custara-mockup.html"
     }
