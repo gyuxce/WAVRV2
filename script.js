@@ -1,70 +1,65 @@
+const CUSTARA_WHATSAPP_NUMBER = (document.body.dataset.whatsapp || "6288980414923").replace(/\D/g, "");
+const CUSTARA_EMAIL = document.body.dataset.email || "partnership@ilusa.id";
+const CUSTARA_WHATSAPP_TEXT = "Halo Custara, saya mau cerita dulu soal bisnis saya. Ingin lihat 1 peluang yang masuk akal.";
+
 const demoSteps = [
   {
-    kicker: "LANGKAH 01 · REGISTER",
-    title: "Nadia masuk sebagai customer baru.",
-    text: "Profil dibuat sekali lalu bisa dikenali pada setiap kunjungan berikutnya, tanpa membangun data yang terpisah-pisah.",
-    metaOne: "Customer profile", metaTwo: "Belum ada riwayat", preview: "profile"
+    kicker: "Datang",
+    title: "Nadia datang sebagai customer baru.",
+    text: "Profil dibuat sekali. Kunjungan berikutnya ketemu orang yang sama, bukan data yang tercerai.",
+    metaOne: "Member baru",
+    metaTwo: "Belum ada riwayat",
+    preview: "arrive"
   },
   {
-    kicker: "LANGKAH 02 · IDENTIFY",
-    title: "Identitas Nadia konsisten di setiap titik layanan.",
-    text: "Nomor telepon, QR, NFC, atau identitas lain dapat menjadi kunci yang menghubungkan pengalaman Nadia secara konsisten.",
-    metaOne: "NFC-00291", metaTwo: "1 customer ID", preview: "identify"
+    kicker: "Kelihatan polanya",
+    title: "Setelah beberapa kali datang, polanya kelihatan.",
+    text: "Sering treatment, belanja cukup besar, lalu jeda 60 hari. Ini yang biasanya hilang di spreadsheet.",
+    metaOne: "9 kunjungan",
+    metaTwo: "Tidak datang >60 hari",
+    preview: "pattern"
   },
   {
-    kicker: "LANGKAH 03 · RECORD",
-    title: "Setiap visit dan transaksi menambah konteks.",
-    text: "Riwayat layanan, nilai belanja, dan frekuensi kunjungan memberi tim cerita yang utuh—bukan tabel transaksi semata.",
-    metaOne: "9 kunjungan", metaTwo: "Rp12,45 juta", preview: "record"
-  },
-  {
-    kicker: "LANGKAH 04 · UNDERSTAND",
-    title: "Custara membaca pola yang sulit terlihat manual.",
-    text: "Nilai customer, kebiasaan berkunjung, dan interval kunjungan berubah menjadi sinyal yang bisa dipahami tim.",
-    metaOne: "High value", metaTwo: "Frequent visitor", preview: "understand"
-  },
-  {
-    kicker: "LANGKAH 05 · OPPORTUNITY",
-    title: "Peluang yang relevan muncul lebih dulu.",
-    text: "Custara memprioritaskan customer dengan potensi kembali tinggi sebelum mereka hilang dari radar operasional.",
-    metaOne: "86 customer", metaTwo: "Inactive >60 hari", preview: "opportunity"
-  },
-  {
-    kicker: "LANGKAH 06 · CAMPAIGN",
-    title: "Action dijalankan dengan alasan yang jelas.",
-    text: "Pilih audience, sesuaikan pesan, lalu ukur customer return dan revenue yang benar-benar dihasilkan dari action tersebut.",
-    metaOne: "WhatsApp", metaTwo: "Hasil terukur", preview: "campaign"
+    kicker: "Dihubungi",
+    title: "Tim tahu harus chat siapa, dan kenapa.",
+    text: "Bukan blast ke semua. Yang dihitung bukan pesan terkirim. Kalau 28 orang kembali, itu yang dihitung.",
+    metaOne: "WhatsApp",
+    metaTwo: "Bukan sekadar terkirim",
+    preview: "contact"
   }
 ];
 
 const previewMarkup = {
-  profile: `
-    <div class="preview-label">Customer profile</div>
+  arrive: `
+    <div class="preview-label">Profil customer</div>
     <div class="preview-person"><span>NP</span><div><strong>Nadia Prameswari</strong><small>Member baru</small></div></div>
     <div class="preview-line full"></div><div class="preview-line medium"></div><div class="preview-line short"></div>`,
-  identify: `
-    <div class="preview-label">Customer identity</div>
-    <div class="preview-person"><span>NP</span><div><strong>Nadia Prameswari</strong><small>Identity matched</small></div></div>
-    <div class="preview-card"><span>Primary ID</span><strong>NFC-00291</strong><small>Telepon · QR · NFC</small></div>`,
-  record: `
-    <div class="preview-label">Customer activity</div>
-    <div class="preview-stat-grid"><div><span>Kunjungan</span><strong>9x</strong></div><div><span>Total belanja</span><strong>Rp12,45 jt</strong></div><div><span>Layanan</span><strong>3 jenis</strong></div></div>
-    <div class="preview-list"><span>Laser Glow <b>09 Agu</b></span><span>Hydra Facial <b>21 Jul</b></span></div>`,
-  understand: `
-    <div class="preview-label">Customer intelligence</div>
-    <div class="preview-card score-card"><span>Skor potensi kembali</span><strong>84</strong><small>Nilai tinggi · kunjungan konsisten</small></div>
-    <div class="preview-tags"><span>High value</span><span>Near tier</span><span>Frequent</span></div>`,
-  opportunity: `
-    <div class="preview-label">Growth opportunity</div>
-    <div class="preview-card opportunity-preview"><span>Inactive >60 days</span><strong>86 customer</strong><small>Rp42,8 juta potensi historis</small></div>
-    <div class="preview-progress"><i></i><span>Prioritas action: tinggi</span></div>`,
-  campaign: `
-    <div class="preview-label">Campaign action</div>
-    <div class="preview-message"><strong>Untuk Nadia</strong>Hai Nadia, kami rindu melihatmu. Nikmati benefit khusus minggu ini.</div>
-    <div class="preview-send"><svg><use href="#send"></use></svg> Kirim via WhatsApp</div>`
+  pattern: `
+    <div class="preview-label">Yang terbaca dari datanya</div>
+    <div class="preview-stat-grid"><div><span>Kunjungan</span><strong>9x</strong></div><div><span>Total belanja</span><strong>Rp12,45 jt</strong></div><div><span>Terakhir datang</span><strong>62 hari</strong></div></div>
+    <div class="preview-tags"><span>Nilai tinggi</span><span>Sering datang</span><span>Perlu dihubungi</span></div>`,
+  contact: `
+    <div class="preview-label">Pesan yang dikirim</div>
+    <div class="preview-message"><strong>Untuk Nadia</strong>Hai Nadia, kangen banget. Ada benefit khusus minggu ini, kalau mau datang lagi.</div>
+    <div class="preview-send"><svg><use href="#send"></use></svg> Kirim via WhatsApp</div>
+    <p class="preview-scenario">Contoh ukurannya: 152 pesan, 28 orang kembali. Yang dihitung yang kembali.</p>`
 };
 
-let activeDemo = 0;
+function whatsappUrl(text) {
+  const encoded = encodeURIComponent(text || CUSTARA_WHATSAPP_TEXT);
+  if (!CUSTARA_WHATSAPP_NUMBER) return `https://wa.me/?text=${encoded}`;
+  return `https://wa.me/${CUSTARA_WHATSAPP_NUMBER}?text=${encoded}`;
+}
+
+function bindWhatsAppLinks() {
+  document.querySelectorAll(".js-whatsapp").forEach((link) => {
+    if (link.id === "formWhatsapp") return;
+    link.href = whatsappUrl();
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+  });
+}
+
 const demoKicker = document.getElementById("demoKicker");
 const demoTitle = document.getElementById("demoTitle");
 const demoText = document.getElementById("demoText");
@@ -72,8 +67,11 @@ const demoMetaOne = document.getElementById("demoMetaOne");
 const demoMetaTwo = document.getElementById("demoMetaTwo");
 const demoPreview = document.getElementById("demoPreview");
 const demoTabs = [...document.querySelectorAll(".demo-tab")];
+const demoNext = document.getElementById("demoNext");
+let activeDemo = 0;
 
 function renderDemo(index) {
+  if (!demoTabs.length || !demoKicker) return;
   activeDemo = (index + demoSteps.length) % demoSteps.length;
   const step = demoSteps[activeDemo];
   demoKicker.textContent = step.kicker;
@@ -89,25 +87,29 @@ function renderDemo(index) {
   });
 }
 
-demoTabs.forEach((tab, index) => tab.addEventListener("click", () => renderDemo(index)));
-document.getElementById("demoNext").addEventListener("click", () => renderDemo(activeDemo + 1));
+if (demoTabs.length) {
+  demoTabs.forEach((tab, index) => tab.addEventListener("click", () => renderDemo(index)));
+  demoNext?.addEventListener("click", () => renderDemo(activeDemo + 1));
+}
 
 const menuToggle = document.getElementById("menuToggle");
 const siteNav = document.getElementById("site-nav");
-menuToggle.addEventListener("click", () => {
-  const open = siteNav.classList.toggle("open");
-  menuToggle.classList.toggle("is-open", open);
-  menuToggle.setAttribute("aria-expanded", String(open));
-  menuToggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
-  document.body.classList.toggle("menu-open", open);
-});
-siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
-  siteNav.classList.remove("open");
-  menuToggle.classList.remove("is-open");
-  menuToggle.setAttribute("aria-expanded", "false");
-  menuToggle.setAttribute("aria-label", "Buka menu");
-  document.body.classList.remove("menu-open");
-}));
+if (menuToggle && siteNav) {
+  menuToggle.addEventListener("click", () => {
+    const open = siteNav.classList.toggle("open");
+    menuToggle.classList.toggle("is-open", open);
+    menuToggle.setAttribute("aria-expanded", String(open));
+    menuToggle.setAttribute("aria-label", open ? "Tutup menu" : "Buka menu");
+    document.body.classList.toggle("menu-open", open);
+  });
+  siteNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+    siteNav.classList.remove("open");
+    menuToggle.classList.remove("is-open");
+    menuToggle.setAttribute("aria-expanded", "false");
+    menuToggle.setAttribute("aria-label", "Buka menu");
+    document.body.classList.remove("menu-open");
+  }));
+}
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -121,11 +123,46 @@ document.querySelectorAll(".reveal").forEach((element) => observer.observe(eleme
 
 const assessmentForm = document.getElementById("assessmentForm");
 const formMessage = document.getElementById("formMessage");
-assessmentForm.addEventListener("submit", (event) => {
+const formWhatsapp = document.getElementById("formWhatsapp");
+
+function formWhatsappMessage() {
+  const data = new FormData(assessmentForm);
+  const name = String(data.get("name") || "").trim();
+  const business = String(data.get("business") || "").trim();
+  if (name && business) {
+    return `Halo Custara, saya ${name} dari ${business}. Mau cerita dulu soal kondisi bisnis saya dan lihat 1 peluang yang masuk akal.`;
+  }
+  if (name) {
+    return `Halo Custara, saya ${name}. Mau cerita dulu soal bisnis saya dan lihat 1 peluang yang masuk akal.`;
+  }
+  return CUSTARA_WHATSAPP_TEXT;
+}
+
+formWhatsapp?.addEventListener("click", (event) => {
   event.preventDefault();
-  const name = new FormData(assessmentForm).get("name")?.trim() || "Anda";
-  formMessage.textContent = `Terima kasih, ${name}. Permintaan Growth Assessment Anda sudah tercatat.`;
-  assessmentForm.reset();
+  window.open(whatsappUrl(formWhatsappMessage()), "_blank", "noopener,noreferrer");
 });
 
-document.getElementById("year").textContent = new Date().getFullYear();
+assessmentForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(assessmentForm);
+  const name = String(data.get("name") || "").trim() || "kamu";
+  const business = String(data.get("business") || "").trim();
+  const whatsapp = String(data.get("whatsapp") || "").trim();
+  const email = String(data.get("email") || "").trim();
+  const source = String(data.get("source") || "").trim();
+  const body = [
+    `Nama: ${name}`,
+    `Bisnis: ${business}`,
+    `WhatsApp: ${whatsapp}`,
+    email ? `Email: ${email}` : "",
+    `Data utama: ${source}`
+  ].filter(Boolean).join("\n");
+  const mailto = `mailto:${CUSTARA_EMAIL}?subject=${encodeURIComponent(`Ngobrol Custara${business ? ` — ${business}` : ""}`)}&body=${encodeURIComponent(body)}`;
+  formMessage.textContent = `Makasih, ${name}. Kalau email tidak terbuka, chat saja ke WhatsApp kami.`;
+  window.location.href = mailto;
+});
+
+bindWhatsAppLinks();
+const year = document.getElementById("year");
+if (year) year.textContent = new Date().getFullYear();
